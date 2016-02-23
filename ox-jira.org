@@ -1,0 +1,74 @@
+#+TITLE: ox-jira
+#+AUTHOR: Stig Brautaset
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+* ox-jira - a JIRA export backend for Org mode
+
+** Header
+
+   First come some [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventional headers]] that libraries tend to include. Cask
+   _requires_ them, so I assume they are a good idea.
+
+*** Short description
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; ox-jira.el --- an Org mode export backend for JIRA format
+    #+END_SRC
+
+*** Copyright
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; Copyright (C) 2016 Stig Brautaset
+    #+END_SRC
+
+*** Author
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; Author: Stig Brautaset <stig@brautaset.org>
+    #+END_SRC
+
+*** Keywords
+
+    Define the keywords that can be used to find this package with
+    =finder-by-keyword= (=C-h p=).
+
+    #+BEGIN_SRC emacs-lisp
+      ;; Keywords: outlines, hypermedia, wp
+    #+END_SRC
+*** Version
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; Version: 0.1-SNAPSHOT
+    #+END_SRC
+
+*** Homepage
+
+    #+BEGIN_SRC emacs-lisp
+      ;; Homepage: https://github.com/stig/ox-jira.el
+    #+END_SRC
+
+*** Package Requires
+
+    We requires Org version 8 or above, as the export backend system we use
+    was introduced then.
+
+    #+BEGIN_SRC emacs-lisp
+      ;; Package-Requires: ((org "8.0"))
+    #+END_SRC
+
+** Code
+
+   First a special header to denote that we're done with the header section
+   and starting the actual code now.
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; Code:
+   #+END_SRC
+
+** Footer
+
+   Now we need to put and end to this malarky. There's a magic comment for
+   that too. It looks like this:
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; ox-jira.el ends here
+   #+END_SRC
