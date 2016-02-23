@@ -3,6 +3,17 @@
 #+PROPERTY: header-args:emacs-lisp :tangle yes
 * ox-jira - a JIRA export backend for Org mode
 
+  I got tired of exporting Org mode to Markdown and pasting _that_ into this
+  [[http://j2m.fokkezb.nl][Markdown to JIRA]] translator, so I'm attempting to write an Org to JIRA
+  export backend.
+
+  This will most likely only be as complete as I need it to be. I feel I tend
+  to use a limited subset of Org's markup, and this backend will likely only
+  support that subset---unless I get some contributions.
+
+  The master source is in =ox-jira.org=, and the code sections are /tangled/
+  (extracted) into =ox-jira.el= from it.
+
 ** Header
 
    First come some [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventional headers]] that libraries tend to include. Cask
