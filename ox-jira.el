@@ -35,4 +35,65 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl))
+(require 'ox)
+(require 'ox-publish)
+
+(org-export-define-backend 'jira
+  '((bold . org-jira-bold)
+    (paragraph . org-jira-paragraph))
+  :menu-entry
+  '(?j "Export to JIRA"
+       ((?j "As JIRA buffer" org-jira-export-as-jira))))
+
+;;; Transcode functions
+
+(defun org-jira-bold (bold contents info)
+  "Transcode BOLD from Org to JIRA.
+CONTENTS is the text with bold markup. INFO is a plist holding
+contextual information."
+  (format "*%s*" contents))
+
+(defun org-jira-paragraph (paragraph contents info)
+  "Transcode a PARAGRAPH element from Org to JIRA.
+CONTENTS is the contents of the paragraph, as a string.  INFO is
+the plist used as a communication channel."
+  contents)
+
+(defun org-jira-export-as-jira
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer as a Jira buffer.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting buffer should be accessible
+through the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+When optional argument BODY-ONLY is non-nil, omit header
+stuff. (e.g. AUTHOR and TITLE.)
+
+EXT-PLIST, when provided, is a property list with external
+parameters overriding Org default settings, but still inferior to
+file-local settings.
+
+Export is done in a buffer named \"*Org JIRA Export*\", which
+will be displayed when `org-export-show-temporary-export-buffer'
+is non-nil."
+  (interactive)
+  (org-export-to-buffer 'jira "*Org JIRA Export*"
+    async subtreep visible-only body-only ext-plist))
+
+(provide 'ox-jira)
+
 ;;; ox-jira.el ends here
