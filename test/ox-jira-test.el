@@ -1,4 +1,3 @@
-
 ;;; ox-jira-test.el --- tests for ox-jira.el
 
 ;;; Author: Stig Brautaset <stig@brautaset.org>
@@ -28,18 +27,11 @@
 ;;; Code:
 
 (require 'ert)
+(require 'ox)
 (require 'ox-jira)
 
-(ert-deftest test-bootstrap-success ()
-  (should (equal 1 1))
-  (should (equal "foo" "foo")))
-
-(ert-deftest test-bootstrap-fail ()
-  (should (equal "foo" "bar")))
-
-
-(ert-deftest test-bootstrap-success-2 ()
-  (should (equal 4 4)))
+(ert-deftest ox-jira-test/hello-world ()
+  (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
 
 (provide 'ox-jira-test)
 

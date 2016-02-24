@@ -1,6 +1,6 @@
 #+TITLE: ox-jira-test
 #+AUTHOR: Stig Brautaset
-#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:emacs-lisp :tangle yes :results silent
 * ox-jira-test.el --- tests for ox-jira.el
 
   This is my first foray into testing in Emacs. Please be patient.
@@ -71,22 +71,18 @@
 
    #+BEGIN_SRC emacs-lisp
      (require 'ert)
+     (require 'ox)
      (require 'ox-jira)
    #+END_SRC
 
-*** Define a bootstrapping test that doesn't require ox-jira at all
+*** Hello World
+
+    Let's write the simplest possible test that actually invokes anything org
+    export related.
 
     #+BEGIN_SRC emacs-lisp
-      (ert-deftest test-bootstrap-success ()
-        (should (equal 1 1))
-        (should (equal "foo" "foo")))
-
-      (ert-deftest test-bootstrap-fail ()
-        (should (equal "foo" "bar")))
-
-      (ert-deftest test-bootstrap-success-2 ()
-        (should (equal 4 4)))
-
+      (ert-deftest ox-jira-test/hello-world ()
+        (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
     #+END_SRC
 
 *** Provide

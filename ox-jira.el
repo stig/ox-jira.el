@@ -40,7 +40,9 @@
 
 (org-export-define-backend 'jira
   '((bold . org-jira-bold)
-    (paragraph . org-jira-paragraph))
+    (headline . org-jira-headline)
+    (paragraph . org-jira-paragraph)
+    (section . org-jira-section))
   :menu-entry
   '(?j "Export to JIRA"
        ((?j "As JIRA buffer" org-jira-export-as-jira))))
@@ -53,9 +55,21 @@ CONTENTS is the text with bold markup. INFO is a plist holding
 contextual information."
   (format "*%s*" contents))
 
+(defun org-jira-headline (headline contents info)
+  "Transcode a HEADLINE element from Org to JIRA.
+CONTENTS is the contents of the headline, as a string.  INFO is
+the plist used as a communication channel."
+  contents)
+
 (defun org-jira-paragraph (paragraph contents info)
   "Transcode a PARAGRAPH element from Org to JIRA.
 CONTENTS is the contents of the paragraph, as a string.  INFO is
+the plist used as a communication channel."
+  contents)
+
+(defun org-jira-section (section contents info)
+  "Transcode a SECTION element from Org to JIRA.
+CONTENTS is the contents of the section, as a string.  INFO is
 the plist used as a communication channel."
   contents)
 

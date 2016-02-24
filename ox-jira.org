@@ -129,7 +129,9 @@
     #+BEGIN_SRC emacs-lisp
       (org-export-define-backend 'jira
         '((bold . org-jira-bold)
-          (paragraph . org-jira-paragraph))
+          (headline . org-jira-headline)
+          (paragraph . org-jira-paragraph)
+          (section . org-jira-section))
         :menu-entry
         '(?j "Export to JIRA"
              ((?j "As JIRA buffer" org-jira-export-as-jira))))
@@ -153,12 +155,36 @@
          (format "*%s*" contents))
      #+END_SRC
 
+**** Headline
+
+     #+BEGIN_SRC emacs-lisp
+       (defun org-jira-headline (headline contents info)
+         "Transcode a HEADLINE element from Org to JIRA.
+       CONTENTS is the contents of the headline, as a string.  INFO is
+       the plist used as a communication channel."
+         contents)
+     #+END_SRC
+
 **** Paragraph
 
      #+BEGIN_SRC emacs-lisp
        (defun org-jira-paragraph (paragraph contents info)
          "Transcode a PARAGRAPH element from Org to JIRA.
        CONTENTS is the contents of the paragraph, as a string.  INFO is
+       the plist used as a communication channel."
+         contents)
+     #+END_SRC
+
+**** Section
+
+     Paragraphs are grouped into sections. I've not found any mention in the
+     Org documentation, but it appears to be essential for any export to
+     happen. I've essentially cribbed this from `ox-latex.el`[fn:1].
+
+     #+BEGIN_SRC emacs-lisp
+       (defun org-jira-section (section contents info)
+         "Transcode a SECTION element from Org to JIRA.
+       CONTENTS is the contents of the section, as a string.  INFO is
        the plist used as a communication channel."
          contents)
      #+END_SRC
@@ -223,3 +249,8 @@
    All that does is help people figure out if a file has been truncated. If
    they see that comment, they know they don't have just half the file.
    Weird, huh?
+
+* Footnotes
+
+[fn:1] Does this mean I have to use the GPL? Is a NOOP function _that you have
+to implement to satisfy an interface_ subject to copyright?
