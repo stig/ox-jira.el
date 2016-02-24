@@ -202,8 +202,7 @@
 
 *** Provide
 
-    I... don't know what this does. But packages tend to have these lines at
-    the bottom. It's probably safest this way. (Please send help!)
+    Announce that =ox-jira= is a feature of the current Emacs.
 
     #+BEGIN_SRC emacs-lisp
       (provide 'ox-jira)
