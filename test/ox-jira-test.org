@@ -1,0 +1,107 @@
+#+TITLE: ox-jira-test
+#+AUTHOR: Stig Brautaset
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+* ox-jira-test.el --- tests for ox-jira.el
+
+  This is my first foray into testing in Emacs. Please be patient.
+
+** Conventional headers
+
+*** Short description
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; ox-jira-test.el --- tests for ox-jira.el
+    #+END_SRC
+
+*** Author
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; Author: Stig Brautaset <stig@brautaset.org>
+    #+END_SRC
+
+*** Distribution
+
+    #+BEGIN_SRC emacs-lisp
+      ;; This file is NOT part of GNU Emacs.
+    #+END_SRC
+
+*** Copyright & License
+
+    I prefer the MIT license because it is short enough to read without toilet
+    or tea breaks, and I _think_ I can actually wrap my head around it. (And I
+    feel it's important to understand the license of your choice.)
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; Copyright (C) 2016 Stig Brautaset
+
+      ;; Permission is hereby granted, free of charge, to any person obtaining a
+      ;; copy of this software and associated documentation files (the "Software"),
+      ;; to deal in the Software without restriction, including without limitation
+      ;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+      ;; and/or sell copies of the Software, and to permit persons to whom the
+      ;; Software is furnished to do so, subject to the following conditions:
+
+      ;; The above copyright notice and this permission notice shall be included in
+      ;; all copies or substantial portions of the Software.
+
+      ;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      ;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      ;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      ;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      ;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+      ;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+      ;; DEALINGS IN THE SOFTWARE.
+    #+END_SRC
+
+*** Code
+
+    Lastly a special header to denote that we're done with the header section
+    and starting the actual code now.
+
+    #+BEGIN_SRC emacs-lisp
+      ;;; Code:
+    #+END_SRC
+
+** Code
+
+*** Require libraries
+
+   The first thing our code needs to do is require the libraries we need. This
+   is cargo-culted from [[https://github.com/NicolasPetton/seq.el/blob/master/test/seq.el-test.el][seq.el-test.el]].
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'ert)
+     (require 'ox-jira)
+   #+END_SRC
+
+*** Define a bootstrapping test that doesn't require ox-jira at all
+
+    #+BEGIN_SRC emacs-lisp
+      (ert-deftest test-bootstrap-success ()
+        (should (equal 1 1))
+        (should (equal "foo" "foo")))
+
+      (ert-deftest test-bootstrap-fail ()
+        (should (equal "foo" "bar")))
+
+      (ert-deftest test-bootstrap-success-2 ()
+        (should (equal 4 4)))
+
+    #+END_SRC
+
+*** Provide
+
+    Announce that =ox-jira-test= is a feature of the current Emacs.
+
+    #+BEGIN_SRC emacs-lisp
+      (provide 'ox-jira-test)
+    #+END_SRC
+
+** Footer
+
+   All this does is help people figure out if a file has been truncated. If
+   they see that comment, they know they don't have just half the file.
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; ox-jira.el-test.el ends here
+   #+END_SRC
