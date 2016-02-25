@@ -1,7 +1,7 @@
-#+TITLE: ox-jira
+#+TITLE: An Org mode export backend for JIRA
 #+AUTHOR: Stig Brautaset
 #+PROPERTY: header-args:emacs-lisp :tangle yes :results silent
-* ox-jira - a JIRA export backend for Org mode
+* Introduction
 
   I got tired of exporting Org mode to Markdown and pasting _that_ into this
   [[http://j2m.fokkezb.nl][Markdown to JIRA]] translator, so I'm attempting to write an Org to JIRA
@@ -14,371 +14,371 @@
   The master source is in =ox-jira.org=, and the code sections are /tangled/
   (extracted) into =ox-jira.el= from it.
 
-** Header
+* Header
 
-   First come some [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventional headers]] that libraries tend to include. Cask
-   _requires_ them, so I assume they are a good idea.
+  First come some [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventional headers]] that libraries tend to include. Cask
+  _requires_ them, so I assume they are a good idea.
 
-*** Short description
+** Short description
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; ox-jira.el --- an Org mode export backend for JIRA format
+   #+END_SRC
+
+** Copyright & License
+
+   I prefer the MIT license because it is short enough to read without toilet
+   or tea breaks, and I _think_ I can actually wrap my head around it. (And I
+   feel it's important to understand the license of your choice.)
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; Copyright (C) 2016 Stig Brautaset
+
+     ;; Permission is hereby granted, free of charge, to any person obtaining a
+     ;; copy of this software and associated documentation files (the "Software"),
+     ;; to deal in the Software without restriction, including without limitation
+     ;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+     ;; and/or sell copies of the Software, and to permit persons to whom the
+     ;; Software is furnished to do so, subject to the following conditions:
+
+     ;; The above copyright notice and this permission notice shall be included in
+     ;; all copies or substantial portions of the Software.
+
+     ;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     ;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     ;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     ;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     ;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+     ;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+     ;; DEALINGS IN THE SOFTWARE.
+   #+END_SRC
+
+** Author
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; Author: Stig Brautaset <stig@brautaset.org>
+   #+END_SRC
+
+** Keywords
+
+   Define the keywords that can be used to find this package with
+   =finder-by-keyword= (=C-h p=).
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Keywords: outlines, hypermedia, wp
+   #+END_SRC
+** Distribution
+
+   #+BEGIN_SRC emacs-lisp
+     ;; This file is NOT part of GNU Emacs.
+   #+END_SRC
+** Version
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; Version: 0.1-SNAPSHOT
+   #+END_SRC
+
+** Homepage
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Homepage: https://github.com/stig/ox-jira.el
+   #+END_SRC
+
+** Package Requires
+
+   We requires Org version 8 or above, as the export backend system we use
+   was introduced then.
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Package-Requires: ((org "8.0"))
+   #+END_SRC
+
+** Code
+
+   Lastly a special header to denote that we're done with the header section
+   and starting the actual code now.
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; Code:
+   #+END_SRC
+
+* Code
+
+  Alright! We're done with the introduction. This section contains the actual
+  code of our package. I'm excited!
+
+** Require libraries
+
+  The first thing our code needs to do is require the libraries we need. This
+  is cargo-culted from `ox-latex.el'.
+
+  #+BEGIN_SRC emacs-lisp
+    (eval-when-compile (require 'cl))
+    (require 'ox)
+    (require 'ox-publish)
+  #+END_SRC
+
+** Define Backend
+
+   This is the entry point of our package. The first argument is the name of
+   our backend. The second is a map between element types[fn:2] to export and
+   the transcode functions to handle them. These are defined in the next
+   section. Finally it tells the Org export backend how to create a menu
+   entry for us.
+
+   #+BEGIN_SRC emacs-lisp
+     (org-export-define-backend 'jira
+       '((babel-call . (lambda (&rest args) (org-jira--not-implemented 'babel-call)))
+         (body . (lambda (&rest args) (org-jira--not-implemented 'body)))
+         (bold . org-jira-bold)
+         (center-block . (lambda (&rest args) (org-jira--not-implemented 'center-block)))
+         (clock . (lambda (&rest args) (org-jira--not-implemented 'clock)))
+         (code . org-jira-code)
+         (diary-sexpexample-block . (lambda (&rest args) (org-jira--not-implemented 'diary-sexpexample-block)))
+         (drawer . (lambda (&rest args) (org-jira--not-implemented 'drawer)))
+         (dynamic-block . (lambda (&rest args) (org-jira--not-implemented 'dynamic-block)))
+         (entity . (lambda (&rest args) (org-jira--not-implemented 'entity)))
+         (export-block . (lambda (&rest args) (org-jira--not-implemented 'export-block)))
+         (export-snippet . (lambda (&rest args) (org-jira--not-implemented 'export-snippet)))
+         (final-output . (lambda (&rest args) (org-jira--not-implemented 'final-output)))
+         (fixed-width . (lambda (&rest args) (org-jira--not-implemented 'fixed-width)))
+         (footnote-definition . (lambda (&rest args) (org-jira--not-implemented 'footnote-definition)))
+         (footnote-reference . (lambda (&rest args) (org-jira--not-implemented 'footnote-reference)))
+         (headline . org-jira-headline)
+         (horizontal-rule . (lambda (&rest args) (org-jira--not-implemented 'horizontal-rule)))
+         (inline-babel-call . (lambda (&rest args) (org-jira--not-implemented 'inline-babel-call)))
+         (inline-src-block . (lambda (&rest args) (org-jira--not-implemented 'inline-src-block)))
+         (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
+         (italic . org-jira-italic)
+         (item . (lambda (&rest args) (org-jira--not-implemented 'item)))
+         (keyword . (lambda (&rest args) (org-jira--not-implemented 'keyword)))
+         (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
+         (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
+         (line-break . (lambda (&rest args) (org-jira--not-implemented 'line-break)))
+         (link . (lambda (&rest args) (org-jira--not-implemented 'link)))
+         (node-property . (lambda (&rest args) (org-jira--not-implemented 'node-property)))
+         (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
+         (paragraph . org-jira-paragraph)
+         (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
+         (plain-list . (lambda (&rest args) (org-jira--not-implemented 'plain-list)))
+         (plain-text . (lambda (plain-text info) plain-text))
+         (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
+         (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
+         (quote-block . org-jira-quote-block)
+         (radio-target . (lambda (&rest args) (org-jira--not-implemented 'radio-target)))
+         (section . org-jira-section)
+         (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
+         (src-block . (lambda (&rest args) (org-jira--not-implemented 'src-block)))
+         (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
+         (strike-through . (lambda (&rest args) (org-jira--not-implemented 'strike-through)))
+         (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
+         (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
+         (table . (lambda (&rest args) (org-jira--not-implemented 'table)))
+         (table-cell . (lambda (&rest args) (org-jira--not-implemented 'table-cell)))
+         (table-row . (lambda (&rest args) (org-jira--not-implemented 'table-row)))
+         (target . (lambda (&rest args) (org-jira--not-implemented 'target)))
+         (timestamp . (lambda (&rest args) (org-jira--not-implemented 'timestamp)))
+         (underline . org-jira-underline)
+         (verbatim . org-jira-verbatim)
+         (verse-block . (lambda (&rest args) (org-jira--not-implemented 'verse-block))))
+       :menu-entry
+       '(?j "Export to JIRA"
+            ((?j "As JIRA buffer" org-jira-export-as-jira))))
+   #+END_SRC
+
+** Internal helpers
+
+   Because I'm adding support for things as I find I need it rather than all
+   in one go, let's put a big fat red marker in for things we have not
+   implemented yet, to avoid missing it.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun org-jira--not-implemented (element-type)
+       "Replace anything we don't handle yet wiht a big red marker."
+       (format "{color:red}\nElement of type '%s' not implemented!\n{color}" element-type))
+   #+END_SRC
+
+** Transcode Functions
+
+   These functions do the actual translation to JIRA format. For this section
+   I've used Atlassian's [[https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all][Text Formatting Notation Help]] page as a reference.
+
+   #+BEGIN_SRC emacs-lisp
+     ;;; Transcode functions
+   #+END_SRC
+
+*** Bold
 
     #+BEGIN_SRC emacs-lisp
-      ;;; ox-jira.el --- an Org mode export backend for JIRA format
-    #+END_SRC
-
-*** Copyright & License
-
-    I prefer the MIT license because it is short enough to read without toilet
-    or tea breaks, and I _think_ I can actually wrap my head around it. (And I
-    feel it's important to understand the license of your choice.)
-
-    #+BEGIN_SRC emacs-lisp
-      ;;; Copyright (C) 2016 Stig Brautaset
-
-      ;; Permission is hereby granted, free of charge, to any person obtaining a
-      ;; copy of this software and associated documentation files (the "Software"),
-      ;; to deal in the Software without restriction, including without limitation
-      ;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
-      ;; and/or sell copies of the Software, and to permit persons to whom the
-      ;; Software is furnished to do so, subject to the following conditions:
-
-      ;; The above copyright notice and this permission notice shall be included in
-      ;; all copies or substantial portions of the Software.
-
-      ;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-      ;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-      ;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-      ;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-      ;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-      ;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-      ;; DEALINGS IN THE SOFTWARE.
-    #+END_SRC
-
-*** Author
-
-    #+BEGIN_SRC emacs-lisp
-      ;;; Author: Stig Brautaset <stig@brautaset.org>
-    #+END_SRC
-
-*** Keywords
-
-    Define the keywords that can be used to find this package with
-    =finder-by-keyword= (=C-h p=).
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Keywords: outlines, hypermedia, wp
-    #+END_SRC
-*** Distribution
-
-    #+BEGIN_SRC emacs-lisp
-      ;; This file is NOT part of GNU Emacs.
-    #+END_SRC
-*** Version
-
-    #+BEGIN_SRC emacs-lisp
-      ;;; Version: 0.1-SNAPSHOT
-    #+END_SRC
-
-*** Homepage
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Homepage: https://github.com/stig/ox-jira.el
-    #+END_SRC
-
-*** Package Requires
-
-    We requires Org version 8 or above, as the export backend system we use
-    was introduced then.
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Package-Requires: ((org "8.0"))
+      (defun org-jira-bold (bold contents info)
+        "Transcode BOLD from Org to JIRA.
+      CONTENTS is the text with bold markup. INFO is a plist holding
+      contextual information."
+        (format "*%s*" contents))
     #+END_SRC
 
 *** Code
 
-    Lastly a special header to denote that we're done with the header section
-    and starting the actual code now.
+    For CODE elements we cannot use the contents, as it is always nil.
 
     #+BEGIN_SRC emacs-lisp
-      ;;; Code:
+      (defun org-jira-code (code _contents info)
+        "Transcode a CODE object from Org to JIRA.
+      CONTENTS is nil.  INFO is a plist used as a communication
+      channel."
+        (format "{{%s}}" (org-element-property :value code)))
     #+END_SRC
 
-** Code
+*** Headline
 
-   Alright! We're done with the introduction. This section contains the actual
-   code of our package. I'm excited!
+    Headlines are a little bit more complex. I'm not even attempting to
+    support TODO labels and meta-information, just the straight-up text. It
+    would be nice to support the six standard levels of headlines JIRA offers
+    though.
 
-*** Require libraries
+    Since the headline level is _relative_ rather than absolute, if the
+    exporter sees a '** second level' heading before it's seen a '* first
+    level' then the '** second level' will think it's a top-level heading.
+    That's a bit weird, but there you go.
 
-   The first thing our code needs to do is require the libraries we need. This
-   is cargo-culted from `ox-latex.el'.
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-headline (headline contents info)
+        "Transcode a HEADLINE element from Org to JIRA.
+      CONTENTS is the contents of the headline, as a string.  INFO is
+      the plist used as a communication channel."
+        (let* ((level (org-export-get-relative-level headline info))
+               (title (org-export-data-with-backend
+                       (org-element-property :title headline)
+                       'jira info)))
+          (concat
+           (format "h%d. %s\n" level title)
+           contents)))
+    #+END_SRC
+
+*** Italic
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-italic (italic contents info)
+        "Transcode ITALIC from Org to JIRA.
+      CONTENTS is the text with italic markup. INFO is a plist holding
+      contextual information."
+        (format "_%s_" contents))
+    #+END_SRC
+
+*** Underline
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-underline (underline contents info)
+        "Transcode UNDERLINE from Org to JIRA.
+      CONTENTS is the text with underline markup. INFO is a plist holding
+      contextual information."
+        (format "+%s+" contents))
+    #+END_SRC
+
+*** Verbatim
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-verbatim (verbatim _contents info)
+        "Transcode a VERBATIM object from Org to Jira.
+      CONTENTS is nil.  INFO is a plist used as a communication
+      channel."
+        (format "{{%s}}" (org-element-property :value verbatim)))
+    #+END_SRC
+
+*** Paragraph
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-paragraph (paragraph contents info)
+        "Transcode a PARAGRAPH element from Org to JIRA.
+      CONTENTS is the contents of the paragraph, as a string.  INFO is
+      the plist used as a communication channel."
+        contents)
+    #+END_SRC
+
+*** Section
+
+    Paragraphs are grouped into sections. I've not found any mention in the
+    Org documentation, but it appears to be essential for any export to
+    happen. I've essentially cribbed this from `ox-latex.el`[fn:1].
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-section (section contents info)
+        "Transcode a SECTION element from Org to JIRA.
+      CONTENTS is the contents of the section, as a string.  INFO is
+      the plist used as a communication channel."
+        contents)
+    #+END_SRC
+
+*** Quote block
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-quote-block (quote-block contents info)
+        "Transcode a QUOTE-BLOCK element from Org to Jira.
+      CONTENTS holds the contents of the block.  INFO is a plist
+      holding contextual information."
+        (format "{quote}\n%s{quote}" contents))
+    #+END_SRC
+
+** End-user functions
+
+   This is our main export function. This can be called from
 
    #+BEGIN_SRC emacs-lisp
-     (eval-when-compile (require 'cl))
-     (require 'ox)
-     (require 'ox-publish)
+     (defun org-jira-export-as-jira
+         (&optional async subtreep visible-only body-only ext-plist)
+       "Export current buffer as a Jira buffer.
+
+     If narrowing is active in the current buffer, only export its
+     narrowed part.
+
+     If a region is active, export that region.
+
+     A non-nil optional argument ASYNC means the process should happen
+     asynchronously.  The resulting buffer should be accessible
+     through the `org-export-stack' interface.
+
+     When optional argument SUBTREEP is non-nil, export the sub-tree
+     at point, extracting information from the headline properties
+     first.
+
+     When optional argument VISIBLE-ONLY is non-nil, don't export
+     contents of hidden elements.
+
+     When optional argument BODY-ONLY is non-nil, omit header
+     stuff. (e.g. AUTHOR and TITLE.)
+
+     EXT-PLIST, when provided, is a property list with external
+     parameters overriding Org default settings, but still inferior to
+     file-local settings.
+
+     Export is done in a buffer named \"*Org JIRA Export*\", which
+     will be displayed when `org-export-show-temporary-export-buffer'
+     is non-nil."
+       (interactive)
+       (org-export-to-buffer 'jira "*Org JIRA Export*"
+         async subtreep visible-only body-only ext-plist))
    #+END_SRC
 
-*** Define Backend
+** Provide
 
-    This is the entry point of our package. The first argument is the name of
-    our backend. The second is a map between element types[fn:2] to export and
-    the transcode functions to handle them. These are defined in the next
-    section. Finally it tells the Org export backend how to create a menu
-    entry for us.
-
-    #+BEGIN_SRC emacs-lisp
-      (org-export-define-backend 'jira
-        '((babel-call . (lambda (&rest args) (org-jira--not-implemented 'babel-call)))
-          (body . (lambda (&rest args) (org-jira--not-implemented 'body)))
-          (bold . org-jira-bold)
-          (center-block . (lambda (&rest args) (org-jira--not-implemented 'center-block)))
-          (clock . (lambda (&rest args) (org-jira--not-implemented 'clock)))
-          (code . org-jira-code)
-          (diary-sexpexample-block . (lambda (&rest args) (org-jira--not-implemented 'diary-sexpexample-block)))
-          (drawer . (lambda (&rest args) (org-jira--not-implemented 'drawer)))
-          (dynamic-block . (lambda (&rest args) (org-jira--not-implemented 'dynamic-block)))
-          (entity . (lambda (&rest args) (org-jira--not-implemented 'entity)))
-          (export-block . (lambda (&rest args) (org-jira--not-implemented 'export-block)))
-          (export-snippet . (lambda (&rest args) (org-jira--not-implemented 'export-snippet)))
-          (final-output . (lambda (&rest args) (org-jira--not-implemented 'final-output)))
-          (fixed-width . (lambda (&rest args) (org-jira--not-implemented 'fixed-width)))
-          (footnote-definition . (lambda (&rest args) (org-jira--not-implemented 'footnote-definition)))
-          (footnote-reference . (lambda (&rest args) (org-jira--not-implemented 'footnote-reference)))
-          (headline . org-jira-headline)
-          (horizontal-rule . (lambda (&rest args) (org-jira--not-implemented 'horizontal-rule)))
-          (inline-babel-call . (lambda (&rest args) (org-jira--not-implemented 'inline-babel-call)))
-          (inline-src-block . (lambda (&rest args) (org-jira--not-implemented 'inline-src-block)))
-          (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
-          (italic . org-jira-italic)
-          (item . (lambda (&rest args) (org-jira--not-implemented 'item)))
-          (keyword . (lambda (&rest args) (org-jira--not-implemented 'keyword)))
-          (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
-          (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
-          (line-break . (lambda (&rest args) (org-jira--not-implemented 'line-break)))
-          (link . (lambda (&rest args) (org-jira--not-implemented 'link)))
-          (node-property . (lambda (&rest args) (org-jira--not-implemented 'node-property)))
-          (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
-          (paragraph . org-jira-paragraph)
-          (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
-          (plain-list . (lambda (&rest args) (org-jira--not-implemented 'plain-list)))
-          (plain-text . (lambda (plain-text info) plain-text))
-          (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
-          (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
-          (quote-block . org-jira-quote-block)
-          (radio-target . (lambda (&rest args) (org-jira--not-implemented 'radio-target)))
-          (section . org-jira-section)
-          (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
-          (src-block . (lambda (&rest args) (org-jira--not-implemented 'src-block)))
-          (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
-          (strike-through . (lambda (&rest args) (org-jira--not-implemented 'strike-through)))
-          (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
-          (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
-          (table . (lambda (&rest args) (org-jira--not-implemented 'table)))
-          (table-cell . (lambda (&rest args) (org-jira--not-implemented 'table-cell)))
-          (table-row . (lambda (&rest args) (org-jira--not-implemented 'table-row)))
-          (target . (lambda (&rest args) (org-jira--not-implemented 'target)))
-          (timestamp . (lambda (&rest args) (org-jira--not-implemented 'timestamp)))
-          (underline . org-jira-underline)
-          (verbatim . org-jira-verbatim)
-          (verse-block . (lambda (&rest args) (org-jira--not-implemented 'verse-block))))
-        :menu-entry
-        '(?j "Export to JIRA"
-             ((?j "As JIRA buffer" org-jira-export-as-jira))))
-    #+END_SRC
-
-*** Internal helpers
-
-    Because I'm adding support for things as I find I need it rather than all
-    in one go, let's put a big fat red marker in for things we have not
-    implemented yet, to avoid missing it.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun org-jira--not-implemented (element-type)
-        "Replace anything we don't handle yet wiht a big red marker."
-        (format "{color:red}\nElement of type '%s' not implemented!\n{color}" element-type))
-    #+END_SRC
-
-*** Transcode Functions
-
-    These functions do the actual translation to JIRA format. For this section
-    I've used Atlassian's [[https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all][Text Formatting Notation Help]] page as a reference.
-
-    #+BEGIN_SRC emacs-lisp
-      ;;; Transcode functions
-    #+END_SRC
-
-**** Bold
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-bold (bold contents info)
-         "Transcode BOLD from Org to JIRA.
-       CONTENTS is the text with bold markup. INFO is a plist holding
-       contextual information."
-         (format "*%s*" contents))
-     #+END_SRC
-
-**** Code
-
-     For CODE elements we cannot use the contents, as it is always nil.
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-code (code _contents info)
-         "Transcode a CODE object from Org to JIRA.
-       CONTENTS is nil.  INFO is a plist used as a communication
-       channel."
-         (format "{{%s}}" (org-element-property :value code)))
-     #+END_SRC
-
-**** Headline
-
-     Headlines are a little bit more complex. I'm not even attempting to
-     support TODO labels and meta-information, just the straight-up text. It
-     would be nice to support the six standard levels of headlines JIRA offers
-     though.
-
-     Since the headline level is _relative_ rather than absolute, if the
-     exporter sees a '** second level' heading before it's seen a '* first
-     level' then the '** second level' will think it's a top-level heading.
-     That's a bit weird, but there you go.
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-headline (headline contents info)
-         "Transcode a HEADLINE element from Org to JIRA.
-       CONTENTS is the contents of the headline, as a string.  INFO is
-       the plist used as a communication channel."
-         (let* ((level (org-export-get-relative-level headline info))
-                (title (org-export-data-with-backend
-                        (org-element-property :title headline)
-                        'jira info)))
-           (concat
-            (format "h%d. %s\n" level title)
-            contents)))
-     #+END_SRC
-
-**** Italic
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-italic (italic contents info)
-         "Transcode ITALIC from Org to JIRA.
-       CONTENTS is the text with italic markup. INFO is a plist holding
-       contextual information."
-         (format "_%s_" contents))
-     #+END_SRC
-
-**** Underline
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-underline (underline contents info)
-         "Transcode UNDERLINE from Org to JIRA.
-       CONTENTS is the text with underline markup. INFO is a plist holding
-       contextual information."
-         (format "+%s+" contents))
-     #+END_SRC
-
-**** Verbatim
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-verbatim (verbatim _contents info)
-         "Transcode a VERBATIM object from Org to Jira.
-       CONTENTS is nil.  INFO is a plist used as a communication
-       channel."
-         (format "{{%s}}" (org-element-property :value verbatim)))
-     #+END_SRC
-
-**** Paragraph
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-paragraph (paragraph contents info)
-         "Transcode a PARAGRAPH element from Org to JIRA.
-       CONTENTS is the contents of the paragraph, as a string.  INFO is
-       the plist used as a communication channel."
-         contents)
-     #+END_SRC
-
-**** Section
-
-     Paragraphs are grouped into sections. I've not found any mention in the
-     Org documentation, but it appears to be essential for any export to
-     happen. I've essentially cribbed this from `ox-latex.el`[fn:1].
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-section (section contents info)
-         "Transcode a SECTION element from Org to JIRA.
-       CONTENTS is the contents of the section, as a string.  INFO is
-       the plist used as a communication channel."
-         contents)
-     #+END_SRC
-
-**** Quote block
-
-     #+BEGIN_SRC emacs-lisp
-       (defun org-jira-quote-block (quote-block contents info)
-         "Transcode a QUOTE-BLOCK element from Org to Jira.
-       CONTENTS holds the contents of the block.  INFO is a plist
-       holding contextual information."
-         (format "{quote}\n%s{quote}" contents))
-     #+END_SRC
-
-*** End-user functions
-
-    This is our main export function. This can be called from
-
-    #+BEGIN_SRC emacs-lisp
-      (defun org-jira-export-as-jira
-          (&optional async subtreep visible-only body-only ext-plist)
-        "Export current buffer as a Jira buffer.
-
-      If narrowing is active in the current buffer, only export its
-      narrowed part.
-
-      If a region is active, export that region.
-
-      A non-nil optional argument ASYNC means the process should happen
-      asynchronously.  The resulting buffer should be accessible
-      through the `org-export-stack' interface.
-
-      When optional argument SUBTREEP is non-nil, export the sub-tree
-      at point, extracting information from the headline properties
-      first.
-
-      When optional argument VISIBLE-ONLY is non-nil, don't export
-      contents of hidden elements.
-
-      When optional argument BODY-ONLY is non-nil, omit header
-      stuff. (e.g. AUTHOR and TITLE.)
-
-      EXT-PLIST, when provided, is a property list with external
-      parameters overriding Org default settings, but still inferior to
-      file-local settings.
-
-      Export is done in a buffer named \"*Org JIRA Export*\", which
-      will be displayed when `org-export-show-temporary-export-buffer'
-      is non-nil."
-        (interactive)
-        (org-export-to-buffer 'jira "*Org JIRA Export*"
-          async subtreep visible-only body-only ext-plist))
-    #+END_SRC
-
-*** Provide
-
-    Announce that =ox-jira= is a feature of the current Emacs.
-
-    #+BEGIN_SRC emacs-lisp
-      (provide 'ox-jira)
-    #+END_SRC
-
-** Footer
-
-   Now we need to put and end to this malarky. There's a magic comment for
-   that too. It looks like this:
+   Announce that =ox-jira= is a feature of the current Emacs.
 
    #+BEGIN_SRC emacs-lisp
-     ;;; ox-jira.el ends here
+     (provide 'ox-jira)
    #+END_SRC
 
-   All that does is help people figure out if a file has been truncated. If
-   they see that comment, they know they don't have just half the file.
-   Weird, huh?
+* Footer
+
+  Now we need to put and end to this malarky. There's a magic comment for
+  that too. It looks like this:
+
+  #+BEGIN_SRC emacs-lisp
+    ;;; ox-jira.el ends here
+  #+END_SRC
+
+  All that does is help people figure out if a file has been truncated. If
+  they see that comment, they know they don't have just half the file.
+  Weird, huh?
 
 * Footnotes
 

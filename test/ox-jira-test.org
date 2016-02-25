@@ -1,156 +1,156 @@
 #+TITLE: ox-jira-test
 #+AUTHOR: Stig Brautaset
 #+PROPERTY: header-args:emacs-lisp :tangle yes :results silent
-* ox-jira-test.el --- tests for ox-jira.el
+* Introduction
 
   This is my first foray into testing in Emacs. Please be patient.
 
-** Conventional headers
+* Conventional headers
 
-*** Short description
+** Short description
 
-    #+BEGIN_SRC emacs-lisp
-      ;;; ox-jira-test.el --- tests for ox-jira.el
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     ;;; ox-jira-test.el --- tests for ox-jira.el
+   #+END_SRC
 
-*** Author
+** Author
 
-    #+BEGIN_SRC emacs-lisp
-      ;;; Author: Stig Brautaset <stig@brautaset.org>
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     ;;; Author: Stig Brautaset <stig@brautaset.org>
+   #+END_SRC
 
-*** Distribution
+** Distribution
 
-    #+BEGIN_SRC emacs-lisp
-      ;; This file is NOT part of GNU Emacs.
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     ;; This file is NOT part of GNU Emacs.
+   #+END_SRC
 
-*** Copyright & License
+** Copyright & License
 
-    I prefer the MIT license because it is short enough to read without toilet
-    or tea breaks, and I _think_ I can actually wrap my head around it. (And I
-    feel it's important to understand the license of your choice.)
+   I prefer the MIT license because it is short enough to read without toilet
+   or tea breaks, and I _think_ I can actually wrap my head around it. (And I
+   feel it's important to understand the license of your choice.)
 
-    #+BEGIN_SRC emacs-lisp
-      ;;; Copyright (C) 2016 Stig Brautaset
+   #+BEGIN_SRC emacs-lisp
+     ;;; Copyright (C) 2016 Stig Brautaset
 
-      ;; Permission is hereby granted, free of charge, to any person obtaining a
-      ;; copy of this software and associated documentation files (the "Software"),
-      ;; to deal in the Software without restriction, including without limitation
-      ;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
-      ;; and/or sell copies of the Software, and to permit persons to whom the
-      ;; Software is furnished to do so, subject to the following conditions:
+     ;; Permission is hereby granted, free of charge, to any person obtaining a
+     ;; copy of this software and associated documentation files (the "Software"),
+     ;; to deal in the Software without restriction, including without limitation
+     ;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+     ;; and/or sell copies of the Software, and to permit persons to whom the
+     ;; Software is furnished to do so, subject to the following conditions:
 
-      ;; The above copyright notice and this permission notice shall be included in
-      ;; all copies or substantial portions of the Software.
+     ;; The above copyright notice and this permission notice shall be included in
+     ;; all copies or substantial portions of the Software.
 
-      ;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-      ;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-      ;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-      ;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-      ;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-      ;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-      ;; DEALINGS IN THE SOFTWARE.
-    #+END_SRC
-
-*** Code
-
-    Lastly a special header to denote that we're done with the header section
-    and starting the actual code now.
-
-    #+BEGIN_SRC emacs-lisp
-      ;;; Code:
-    #+END_SRC
+     ;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     ;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     ;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     ;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     ;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+     ;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+     ;; DEALINGS IN THE SOFTWARE.
+   #+END_SRC
 
 ** Code
 
-*** Require libraries
-
-   The first thing our code needs to do is require the libraries we need. This
-   is cargo-culted from [[https://github.com/NicolasPetton/seq.el/blob/master/test/seq.el-test.el][seq.el-test.el]].
+   Lastly a special header to denote that we're done with the header section
+   and starting the actual code now.
 
    #+BEGIN_SRC emacs-lisp
-     (require 'ert)
-     (require 'ox)
-     (require 'ox-jira)
+     ;;; Code:
    #+END_SRC
 
-*** Hello World
+* Code
 
-    Let's write the simplest possible test that actually invokes anything org
-    export related.
+** Require libraries
 
-    #+BEGIN_SRC emacs-lisp
-      (ert-deftest ox-jira-test/hello-world ()
-        (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
-    #+END_SRC
+  The first thing our code needs to do is require the libraries we need. This
+  is cargo-culted from [[https://github.com/NicolasPetton/seq.el/blob/master/test/seq.el-test.el][seq.el-test.el]].
 
-*** Simple text effects
+  #+BEGIN_SRC emacs-lisp
+    (require 'ert)
+    (require 'ox)
+    (require 'ox-jira)
+  #+END_SRC
 
-    Let's do some standalone tests of very simple markup for inline text effects.
+** Hello World
 
-    #+BEGIN_SRC emacs-lisp
-      (ert-deftest ox-jira-test/text-effects ()
-        (should (equal "this is *strong* text\n" (org-export-string-as "this is *strong* text" 'jira)))
-        (should (equal "this is _emphasised_ text\n" (org-export-string-as "this is /emphasised/ text" 'jira)))
-        (should (equal "this is +underlined+ text\n" (org-export-string-as "this is _underlined_ text" 'jira)))
-        (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
-        (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
-    #+END_SRC
-
-    Quotations are a bit more elaborate, so let's test those separately. They
-    can have other text effects inside them too.
-
-    #+BEGIN_SRC emacs-lisp
-      (ert-deftest ox-jira-test/quotations ()
-        (should (equal "{quote}
-      This is a quote.
-
-      It can have multiple paragraphs.
-      {quote}
-      " (org-export-string-as "
-      ,#+BEGIN_QUOTE
-      This is a quote.
-
-      It can have multiple paragraphs.
-      ,#+END_QUOTE" 'jira)))
-
-        (should (equal "{quote}
-      This is a quote with _emphasis_.
-      {quote}
-      " (org-export-string-as "
-      ,#+begin_quote
-      This is a quote with /emphasis/.
-      ,#+end_quote" 'jira))))
-    #+END_SRC
-
-*** Headlines
-
-    Headline numbering in org is _relative_, so we cannot test that they work one-by-one.
-
-    #+BEGIN_SRC emacs-lisp
-      (ert-deftest ox-jira-test/headlines ()
-        (should (equal "h1. top level
-      h2. second level
-      h3. third level
-      " (org-export-string-as "* top level
-      ,** second level
-      ,*** third level" 'jira))))
-    #+END_SRC
-
-*** Provide
-
-    Announce that =ox-jira-test= is a feature of the current Emacs.
-
-    #+BEGIN_SRC emacs-lisp
-      (provide 'ox-jira-test)
-    #+END_SRC
-
-** Footer
-
-   All this does is help people figure out if a file has been truncated. If
-   they see that comment, they know they don't have just half the file.
+   Let's write the simplest possible test that actually invokes anything org
+   export related.
 
    #+BEGIN_SRC emacs-lisp
-     ;;; ox-jira.el-test.el ends here
+     (ert-deftest ox-jira-test/hello-world ()
+       (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
    #+END_SRC
+
+** Simple text effects
+
+   Let's do some standalone tests of very simple markup for inline text effects.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/text-effects ()
+       (should (equal "this is *strong* text\n" (org-export-string-as "this is *strong* text" 'jira)))
+       (should (equal "this is _emphasised_ text\n" (org-export-string-as "this is /emphasised/ text" 'jira)))
+       (should (equal "this is +underlined+ text\n" (org-export-string-as "this is _underlined_ text" 'jira)))
+       (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
+       (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
+   #+END_SRC
+
+   Quotations are a bit more elaborate, so let's test those separately. They
+   can have other text effects inside them too.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/quotations ()
+       (should (equal "{quote}
+     This is a quote.
+
+     It can have multiple paragraphs.
+     {quote}
+     " (org-export-string-as "
+     ,#+BEGIN_QUOTE
+     This is a quote.
+
+     It can have multiple paragraphs.
+     ,#+END_QUOTE" 'jira)))
+
+       (should (equal "{quote}
+     This is a quote with _emphasis_.
+     {quote}
+     " (org-export-string-as "
+     ,#+begin_quote
+     This is a quote with /emphasis/.
+     ,#+end_quote" 'jira))))
+   #+END_SRC
+
+** Headlines
+
+   Headline numbering in org is _relative_, so we cannot test that they work one-by-one.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/headlines ()
+       (should (equal "h1. top level
+     h2. second level
+     h3. third level
+     " (org-export-string-as "* top level
+     ,** second level
+     ,*** third level" 'jira))))
+   #+END_SRC
+
+** Provide
+
+   Announce that =ox-jira-test= is a feature of the current Emacs.
+
+   #+BEGIN_SRC emacs-lisp
+     (provide 'ox-jira-test)
+   #+END_SRC
+
+* Footer
+
+  All this does is help people figure out if a file has been truncated. If
+  they see that comment, they know they don't have just half the file.
+
+  #+BEGIN_SRC emacs-lisp
+    ;;; ox-jira.el-test.el ends here
+  #+END_SRC
