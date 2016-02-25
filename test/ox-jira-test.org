@@ -124,6 +124,20 @@
       ,#+end_quote" 'jira))))
     #+END_SRC
 
+*** Headlines
+
+    Headline numbering in org is _relative_, so we cannot test that they work one-by-one.
+
+    #+BEGIN_SRC emacs-lisp
+      (ert-deftest ox-jira-test/headlines ()
+        (should (equal "h1. top level
+      h2. second level
+      h3. third level
+      " (org-export-string-as "* top level
+      ,** second level
+      ,*** third level" 'jira))))
+    #+END_SRC
+
 *** Provide
 
     Announce that =ox-jira-test= is a feature of the current Emacs.

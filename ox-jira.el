@@ -118,7 +118,13 @@ channel."
   "Transcode a HEADLINE element from Org to JIRA.
 CONTENTS is the contents of the headline, as a string.  INFO is
 the plist used as a communication channel."
-  contents)
+  (let* ((level (org-export-get-relative-level headline info))
+         (title (org-export-data-with-backend
+                 (org-element-property :title headline)
+                 'jira info)))
+    (concat
+     (format "h%d. %s\n" level title)
+     contents)))
 
 (defun org-jira-italic (italic contents info)
   "Transcode ITALIC from Org to JIRA.

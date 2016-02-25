@@ -61,6 +61,14 @@ This is a quote with _emphasis_.
 This is a quote with /emphasis/.
 #+end_quote" 'jira))))
 
+(ert-deftest ox-jira-test/headlines ()
+  (should (equal "h1. top level
+h2. second level
+h3. third level
+" (org-export-string-as "* top level
+** second level
+*** third level" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here

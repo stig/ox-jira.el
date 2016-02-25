@@ -231,12 +231,28 @@
 
 **** Headline
 
+     Headlines are a little bit more complex. I'm not even attempting to
+     support TODO labels and meta-information, just the straight-up text. It
+     would be nice to support the six standard levels of headlines JIRA offers
+     though.
+
+     Since the headline level is _relative_ rather than absolute, if the
+     exporter sees a '** second level' heading before it's seen a '* first
+     level' then the '** second level' will think it's a top-level heading.
+     That's a bit weird, but there you go.
+
      #+BEGIN_SRC emacs-lisp
        (defun org-jira-headline (headline contents info)
          "Transcode a HEADLINE element from Org to JIRA.
        CONTENTS is the contents of the headline, as a string.  INFO is
        the plist used as a communication channel."
-         contents)
+         (let* ((level (org-export-get-relative-level headline info))
+                (title (org-export-data-with-backend
+                        (org-element-property :title headline)
+                        'jira info)))
+           (concat
+            (format "h%d. %s\n" level title)
+            contents)))
      #+END_SRC
 
 **** Italic
