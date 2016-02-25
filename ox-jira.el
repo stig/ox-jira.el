@@ -106,7 +106,7 @@ the plist used as a communication channel."
   "Transcode a QUOTE-BLOCK element from Org to Jira.
 CONTENTS holds the contents of the block.  INFO is a plist
 holding contextual information."
-  (format "{quote}\n%s\n{quote}" contents))
+  (format "{quote}\n%s{quote}" contents))
 
 (defun org-jira-export-as-jira
     (&optional async subtreep visible-only body-only ext-plist)
