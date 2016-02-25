@@ -46,11 +46,20 @@ This is a quote.
 
 It can have multiple paragraphs.
 {quote}
-" (org-export-string-as "#+BEGIN_QUOTE
+" (org-export-string-as "
+#+BEGIN_QUOTE
 This is a quote.
 
 It can have multiple paragraphs.
-#+END_QUOTE" 'jira))))
+#+END_QUOTE" 'jira)))
+
+  (should (equal "{quote}
+This is a quote with _emphasis_.
+{quote}
+" (org-export-string-as "
+#+begin_quote
+This is a quote with /emphasis/.
+#+end_quote" 'jira))))
 
 (provide 'ox-jira-test)
 
