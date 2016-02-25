@@ -1,4 +1,3 @@
-
 ;;; ox-jira.el --- an Org mode export backend for JIRA format
 
 ;;; Copyright (C) 2016 Stig Brautaset
