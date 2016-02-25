@@ -33,6 +33,13 @@
 (ert-deftest ox-jira-test/hello-world ()
   (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
 
+(ert-deftest ox-jira-test/text-effects ()
+  (should (equal "this is *strong* text\n" (org-export-string-as "this is *strong* text" 'jira)))
+  (should (equal "this is _emphasised_ text\n" (org-export-string-as "this is /emphasised/ text" 'jira)))
+  (should (equal "this is +underlined+ text\n" (org-export-string-as "this is _underlined_ text" 'jira)))
+  (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
+  (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here

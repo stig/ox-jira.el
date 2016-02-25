@@ -40,8 +40,12 @@
 
 (org-export-define-backend 'jira
   '((bold . org-jira-bold)
+    (code . org-jira-code)
     (headline . org-jira-headline)
+    (italic . org-jira-italic)
     (paragraph . org-jira-paragraph)
+    (underline . org-jira-underline)
+    (verbatim . org-jira-verbatim)
     (section . org-jira-section))
   :menu-entry
   '(?j "Export to JIRA"
@@ -55,11 +59,35 @@ CONTENTS is the text with bold markup. INFO is a plist holding
 contextual information."
   (format "*%s*" contents))
 
+(defun org-jira-code (code _contents info)
+  "Transcode a CODE object from Org to JIRA.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+  (format "{{%s}}" (org-element-property :value code)))
+
 (defun org-jira-headline (headline contents info)
   "Transcode a HEADLINE element from Org to JIRA.
 CONTENTS is the contents of the headline, as a string.  INFO is
 the plist used as a communication channel."
   contents)
+
+(defun org-jira-italic (italic contents info)
+  "Transcode ITALIC from Org to JIRA.
+CONTENTS is the text with italic markup. INFO is a plist holding
+contextual information."
+  (format "_%s_" contents))
+
+(defun org-jira-underline (underline contents info)
+  "Transcode UNDERLINE from Org to JIRA.
+CONTENTS is the text with underline markup. INFO is a plist holding
+contextual information."
+  (format "+%s+" contents))
+
+(defun org-jira-verbatim (verbatim _contents info)
+  "Transcode a VERBATIM object from Org to Jira.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+  (format "{{%s}}" (org-element-property :value verbatim)))
 
 (defun org-jira-paragraph (paragraph contents info)
   "Transcode a PARAGRAPH element from Org to JIRA.

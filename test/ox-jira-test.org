@@ -85,6 +85,19 @@
         (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
     #+END_SRC
 
+*** Simple text effects
+
+    Let's do some standalone tests of very simple markup for inline text effects.
+
+    #+BEGIN_SRC emacs-lisp
+      (ert-deftest ox-jira-test/text-effects ()
+        (should (equal "this is *strong* text\n" (org-export-string-as "this is *strong* text" 'jira)))
+        (should (equal "this is _emphasised_ text\n" (org-export-string-as "this is /emphasised/ text" 'jira)))
+        (should (equal "this is +underlined+ text\n" (org-export-string-as "this is _underlined_ text" 'jira)))
+        (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
+        (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
+    #+END_SRC
+
 *** Provide
 
     Announce that =ox-jira-test= is a feature of the current Emacs.
