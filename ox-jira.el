@@ -1,3 +1,4 @@
+
 ;;; ox-jira.el --- an Org mode export backend for JIRA format
 
 ;;; Copyright (C) 2016 Stig Brautaset
@@ -61,7 +62,7 @@
     (inline-src-block . (lambda (&rest args) (org-jira--not-implemented 'inline-src-block)))
     (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
     (italic . org-jira-italic)
-    (item . (lambda (&rest args) (org-jira--not-implemented 'item)))
+    (item . org-jira-item)
     (keyword . (lambda (&rest args) (org-jira--not-implemented 'keyword)))
     (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
     (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
@@ -71,7 +72,7 @@
     (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
     (paragraph . org-jira-paragraph)
     (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
-    (plain-list . (lambda (&rest args) (org-jira--not-implemented 'plain-list)))
+    (plain-list . org-jira-plain-list)
     (plain-text . (lambda (plain-text info) plain-text))
     (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
     (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
@@ -132,6 +133,15 @@ CONTENTS is the text with italic markup. INFO is a plist holding
 contextual information."
   (format "_%s_" contents))
 
+(defun org-jira-item (item contents info)
+  "Transcode ITEM from Org to JIRA.
+CONTENTS is the text with item markup. INFO is a plist holding
+contextual information."
+  (let* ((parent (org-element-property :parent item))
+         (list-type (org-element-property :type parent)))
+    (format "%s %s" (if (eq list-type 'ordered) "#" "-")
+                        contents)))
+
 (defun org-jira-underline (underline contents info)
   "Transcode UNDERLINE from Org to JIRA.
 CONTENTS is the text with underline markup. INFO is a plist holding
@@ -149,6 +159,12 @@ channel."
 CONTENTS is the contents of the paragraph, as a string.  INFO is
 the plist used as a communication channel."
   (replace-regexp-in-string "\n[^\']" " " contents))
+
+(defun org-jira-plain-list (plain-list contents info)
+  "Transcode PLAIN-LIST from Org to JIRA.
+      CONTENTS is the text with plain-list markup. INFO is a plist holding
+      contextual information."
+  contents)
 
 (defun org-jira-section (section contents info)
   "Transcode a SECTION element from Org to JIRA.

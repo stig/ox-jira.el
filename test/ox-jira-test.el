@@ -76,6 +76,26 @@ h3. third level
 ,fa
 ,fum" 'jira))))
 
+(ert-deftest ox-jira-test/unordered-lists()
+  (should (equal "- fi
+- fo
+- fa
+- fum
+" (org-export-string-as "- fi
+- fo
+- fa
+- fum" 'jira))))
+
+(ert-deftest ox-jira-test/ordered-lists()
+  (should (equal "# fi
+# fo
+# fa
+# fum
+" (org-export-string-as "1. fi
+2. fo
+3. fa
+3. fum" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here

@@ -150,7 +150,7 @@
          (inline-src-block . (lambda (&rest args) (org-jira--not-implemented 'inline-src-block)))
          (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
          (italic . org-jira-italic)
-         (item . (lambda (&rest args) (org-jira--not-implemented 'item)))
+         (item . org-jira-item)
          (keyword . (lambda (&rest args) (org-jira--not-implemented 'keyword)))
          (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
          (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
@@ -160,7 +160,7 @@
          (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
          (paragraph . org-jira-paragraph)
          (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
-         (plain-list . (lambda (&rest args) (org-jira--not-implemented 'plain-list)))
+         (plain-list . org-jira-plain-list)
          (plain-text . (lambda (plain-text info) plain-text))
          (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
          (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
@@ -265,6 +265,22 @@
         (format "_%s_" contents))
     #+END_SRC
 
+*** Item
+
+    A list item. This could be bullets, or numeric. This can get quite
+    complex. We might not handle every case...
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-item (item contents info)
+        "Transcode ITEM from Org to JIRA.
+      CONTENTS is the text with item markup. INFO is a plist holding
+      contextual information."
+        (let* ((parent (org-element-property :parent item))
+               (list-type (org-element-property :type parent)))
+          (format "%s %s" (if (eq list-type 'ordered) "#" "-")
+                              contents)))
+    #+END_SRC
+
 *** Underline
 
     #+BEGIN_SRC emacs-lisp
@@ -301,6 +317,20 @@
       CONTENTS is the contents of the paragraph, as a string.  INFO is
       the plist used as a communication channel."
         (replace-regexp-in-string "\n[^\']" " " contents))
+    #+END_SRC
+
+*** Plain lists
+
+    I make a lot of lists. Let's make sure we handle them! This is very
+    simple, as in the JIRA format all the logic is actually _for each item_ in
+    the list.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-plain-list (plain-list contents info)
+        "Transcode PLAIN-LIST from Org to JIRA.
+            CONTENTS is the text with plain-list markup. INFO is a plist holding
+            contextual information."
+        contents)
     #+END_SRC
 
 *** Section

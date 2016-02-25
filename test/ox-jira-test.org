@@ -1,4 +1,4 @@
-#+TITLE: ox-jira-test
+#+TITLE: Tests for JIRA Org export backend
 #+AUTHOR: Stig Brautaset
 #+PROPERTY: header-args:emacs-lisp :tangle yes :results silent
 * Introduction
@@ -148,6 +148,32 @@
      ,fo
      ,fa
      ,fum" 'jira))))
+   #+END_SRC
+
+** Plain lists
+
+   I like to use lists, so check that we handle them!
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/unordered-lists()
+       (should (equal "- fi
+     - fo
+     - fa
+     - fum
+     " (org-export-string-as "- fi
+     - fo
+     - fa
+     - fum" 'jira))))
+
+     (ert-deftest ox-jira-test/ordered-lists()
+       (should (equal "# fi
+     # fo
+     # fa
+     # fum
+     " (org-export-string-as "1. fi
+     2. fo
+     3. fa
+     3. fum" 'jira))))
    #+END_SRC
 
 ** Provide
