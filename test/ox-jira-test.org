@@ -98,6 +98,23 @@
         (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
     #+END_SRC
 
+    Quotations are a bit more elaborate, so let's test those separately. They
+    can have other text effects inside them too.
+
+    #+BEGIN_SRC emacs-lisp
+      (ert-deftest ox-jira-test/quotations ()
+        (should (equal "{quote}
+      This is a quote.
+
+      It can have multiple paragraphs.
+      {quote}
+      " (org-export-string-as "#+BEGIN_QUOTE
+      This is a quote.
+
+      It can have multiple paragraphs.
+      ,#+END_QUOTE" 'jira))))
+    #+END_SRC
+
 *** Provide
 
     Announce that =ox-jira-test= is a feature of the current Emacs.

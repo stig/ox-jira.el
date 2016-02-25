@@ -40,6 +40,18 @@
   (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
   (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
 
+(ert-deftest ox-jira-test/quotations ()
+  (should (equal "{quote}
+This is a quote.
+
+It can have multiple paragraphs.
+{quote}
+" (org-export-string-as "#+BEGIN_QUOTE
+This is a quote.
+
+It can have multiple paragraphs.
+#+END_QUOTE" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here

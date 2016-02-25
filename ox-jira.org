@@ -133,6 +133,7 @@
           (headline . org-jira-headline)
           (italic . org-jira-italic)
           (paragraph . org-jira-paragraph)
+          (quote-block . org-jira-quote-block)
           (underline . org-jira-underline)
           (verbatim . org-jira-verbatim)
           (section . org-jira-section))
@@ -234,6 +235,16 @@
        CONTENTS is the contents of the section, as a string.  INFO is
        the plist used as a communication channel."
          contents)
+     #+END_SRC
+
+**** Quote block
+
+     #+BEGIN_SRC emacs-lisp
+       (defun org-jira-quote-block (quote-block contents info)
+         "Transcode a QUOTE-BLOCK element from Org to Jira.
+       CONTENTS holds the contents of the block.  INFO is a plist
+       holding contextual information."
+         (format "{quote}\n%s{quote}" contents))
      #+END_SRC
 
 *** End-user functions

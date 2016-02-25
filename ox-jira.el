@@ -44,6 +44,7 @@
     (headline . org-jira-headline)
     (italic . org-jira-italic)
     (paragraph . org-jira-paragraph)
+    (quote-block . org-jira-quote-block)
     (underline . org-jira-underline)
     (verbatim . org-jira-verbatim)
     (section . org-jira-section))
@@ -100,6 +101,12 @@ the plist used as a communication channel."
 CONTENTS is the contents of the section, as a string.  INFO is
 the plist used as a communication channel."
   contents)
+
+(defun org-jira-quote-block (quote-block contents info)
+  "Transcode a QUOTE-BLOCK element from Org to Jira.
+CONTENTS holds the contents of the block.  INFO is a plist
+holding contextual information."
+  (format "{quote}\n%s\n{quote}" contents))
 
 (defun org-jira-export-as-jira
     (&optional async subtreep visible-only body-only ext-plist)
