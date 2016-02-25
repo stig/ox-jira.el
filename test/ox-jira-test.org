@@ -138,6 +138,18 @@
      ,*** third level" 'jira))))
    #+END_SRC
 
+** Paragraphs
+
+   Check that text in paragraphs does not have hard newlines.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/paragraphs ()
+       (should (equal "fi fo fa fum\n" (org-export-string-as "fi
+     ,fo
+     ,fa
+     ,fum" 'jira))))
+   #+END_SRC
+
 ** Provide
 
    Announce that =ox-jira-test= is a feature of the current Emacs.

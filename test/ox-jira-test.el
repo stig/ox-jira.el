@@ -1,3 +1,4 @@
+
 ;;; ox-jira-test.el --- tests for ox-jira.el
 
 ;;; Author: Stig Brautaset <stig@brautaset.org>
@@ -68,6 +69,12 @@ h3. third level
 " (org-export-string-as "* top level
 ** second level
 *** third level" 'jira))))
+
+(ert-deftest ox-jira-test/paragraphs ()
+  (should (equal "fi fo fa fum\n" (org-export-string-as "fi
+,fo
+,fa
+,fum" 'jira))))
 
 (provide 'ox-jira-test)
 

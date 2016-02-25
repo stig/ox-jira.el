@@ -287,12 +287,20 @@
 
 *** Paragraph
 
+    One of the most annoying things about JIRA markup is the way it doesn't
+    reflow text properly, so any linebreaks becomes hard linebreaks in the
+    rendered output. Let's fix that!
+
+    What we need to do is replace any _internal_ newlines (i.e. any not at the
+    end of the string) with a space. Regexes to the rescue! I used [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Regexp-Backslash.html#Regexp-Backslash][this
+    reference]] to help me with this function.
+
     #+BEGIN_SRC emacs-lisp
       (defun org-jira-paragraph (paragraph contents info)
         "Transcode a PARAGRAPH element from Org to JIRA.
       CONTENTS is the contents of the paragraph, as a string.  INFO is
       the plist used as a communication channel."
-        contents)
+        (replace-regexp-in-string "\n[^\']" " " contents))
     #+END_SRC
 
 *** Section

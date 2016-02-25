@@ -148,7 +148,7 @@ channel."
   "Transcode a PARAGRAPH element from Org to JIRA.
 CONTENTS is the contents of the paragraph, as a string.  INFO is
 the plist used as a communication channel."
-  contents)
+  (replace-regexp-in-string "\n[^\']" " " contents))
 
 (defun org-jira-section (section contents info)
   "Transcode a SECTION element from Org to JIRA.
