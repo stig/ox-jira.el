@@ -121,25 +121,81 @@
 *** Define Backend
 
     This is the entry point of our package. The first argument is the name of
-    our backend. The second is a map between "things" to export and their
-    transcode functions to handle them. These are defined in the next
+    our backend. The second is a map between element types[fn:2] to export and
+    the transcode functions to handle them. These are defined in the next
     section. Finally it tells the Org export backend how to create a menu
     entry for us.
 
     #+BEGIN_SRC emacs-lisp
       (org-export-define-backend 'jira
-        '((bold . org-jira-bold)
+        '((babel-call . (lambda (&rest args) (org-jira--not-implemented 'babel-call)))
+          (body . (lambda (&rest args) (org-jira--not-implemented 'body)))
+          (bold . org-jira-bold)
+          (center-block . (lambda (&rest args) (org-jira--not-implemented 'center-block)))
+          (clock . (lambda (&rest args) (org-jira--not-implemented 'clock)))
           (code . org-jira-code)
+          (diary-sexpexample-block . (lambda (&rest args) (org-jira--not-implemented 'diary-sexpexample-block)))
+          (drawer . (lambda (&rest args) (org-jira--not-implemented 'drawer)))
+          (dynamic-block . (lambda (&rest args) (org-jira--not-implemented 'dynamic-block)))
+          (entity . (lambda (&rest args) (org-jira--not-implemented 'entity)))
+          (export-block . (lambda (&rest args) (org-jira--not-implemented 'export-block)))
+          (export-snippet . (lambda (&rest args) (org-jira--not-implemented 'export-snippet)))
+          (final-output . (lambda (&rest args) (org-jira--not-implemented 'final-output)))
+          (fixed-width . (lambda (&rest args) (org-jira--not-implemented 'fixed-width)))
+          (footnote-definition . (lambda (&rest args) (org-jira--not-implemented 'footnote-definition)))
+          (footnote-reference . (lambda (&rest args) (org-jira--not-implemented 'footnote-reference)))
           (headline . org-jira-headline)
+          (horizontal-rule . (lambda (&rest args) (org-jira--not-implemented 'horizontal-rule)))
+          (inline-babel-call . (lambda (&rest args) (org-jira--not-implemented 'inline-babel-call)))
+          (inline-src-block . (lambda (&rest args) (org-jira--not-implemented 'inline-src-block)))
+          (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
           (italic . org-jira-italic)
+          (item . (lambda (&rest args) (org-jira--not-implemented 'item)))
+          (keyword . (lambda (&rest args) (org-jira--not-implemented 'keyword)))
+          (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
+          (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
+          (line-break . (lambda (&rest args) (org-jira--not-implemented 'line-break)))
+          (link . (lambda (&rest args) (org-jira--not-implemented 'link)))
+          (node-property . (lambda (&rest args) (org-jira--not-implemented 'node-property)))
+          (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
           (paragraph . org-jira-paragraph)
+          (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
+          (plain-list . (lambda (&rest args) (org-jira--not-implemented 'plain-list)))
+          (plain-text . (lambda (plain-text info) plain-text))
+          (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
+          (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
           (quote-block . org-jira-quote-block)
+          (radio-target . (lambda (&rest args) (org-jira--not-implemented 'radio-target)))
+          (section . org-jira-section)
+          (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
+          (src-block . (lambda (&rest args) (org-jira--not-implemented 'src-block)))
+          (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
+          (strike-through . (lambda (&rest args) (org-jira--not-implemented 'strike-through)))
+          (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
+          (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
+          (table . (lambda (&rest args) (org-jira--not-implemented 'table)))
+          (table-cell . (lambda (&rest args) (org-jira--not-implemented 'table-cell)))
+          (table-row . (lambda (&rest args) (org-jira--not-implemented 'table-row)))
+          (target . (lambda (&rest args) (org-jira--not-implemented 'target)))
+          (timestamp . (lambda (&rest args) (org-jira--not-implemented 'timestamp)))
           (underline . org-jira-underline)
           (verbatim . org-jira-verbatim)
-          (section . org-jira-section))
+          (verse-block . (lambda (&rest args) (org-jira--not-implemented 'verse-block))))
         :menu-entry
         '(?j "Export to JIRA"
              ((?j "As JIRA buffer" org-jira-export-as-jira))))
+    #+END_SRC
+
+*** Internal helpers
+
+    Because I'm adding support for things as I find I need it rather than all
+    in one go, let's put a big fat red marker in for things we have not
+    implemented yet, to avoid missing it.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira--not-implemented (element-type)
+        "Replace anything we don't handle yet wiht a big red marker."
+        (format "{color:red}\nElement of type '%s' not implemented!\n{color}" element-type))
     #+END_SRC
 
 *** Transcode Functions
@@ -309,6 +365,8 @@
    Weird, huh?
 
 * Footnotes
+
+[fn:2] I got this list of elements from http://orgmode.org/manual/Advanced-configuration.html
 
 [fn:1] Does this mean I have to use the GPL? Is a NOOP function _that you have
 to implement to satisfy an interface_ subject to copyright?
