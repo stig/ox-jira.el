@@ -12,7 +12,7 @@
   support that subset---unless I get some contributions.
 
   The master source is in =ox-jira.org=, and the code sections are /tangled/
-  (extracted) into =ox-jira.el= from it.
+  (i.e. extracted) into =ox-jira.el= from it.
 
 * Header
 
@@ -195,7 +195,7 @@
    #+BEGIN_SRC emacs-lisp
      (defun org-jira--not-implemented (element-type)
        "Replace anything we don't handle yet wiht a big red marker."
-       (format "{color:red}\nElement of type '%s' not implemented!\n{color}" element-type))
+       (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
    #+END_SRC
 
 ** Transcode Functions

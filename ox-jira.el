@@ -98,7 +98,7 @@
 
 (defun org-jira--not-implemented (element-type)
   "Replace anything we don't handle yet wiht a big red marker."
-  (format "{color:red}\nElement of type '%s' not implemented!\n{color}" element-type))
+  (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
 
 ;;; Transcode functions
 
