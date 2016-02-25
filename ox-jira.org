@@ -104,6 +104,9 @@
 
 ** Code
 
+   Alright! We're done with the introduction. This section contains the actual
+   code of our package. I'm excited!
+
 *** Require libraries
 
    The first thing our code needs to do is require the libraries we need. This
