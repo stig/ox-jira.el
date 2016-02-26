@@ -3,7 +3,7 @@
 
 (package-file "ox-jira.el")
 
-(files "*.el")
+(files "ox-jira.el")
 
 (development
  (depends-on "f")
