@@ -1,4 +1,4 @@
-#+TITLE: Tests for JIRA Org export backend
+#+TITLE: Tests for JIRA Backend Org Export Engine
 #+AUTHOR: Stig Brautaset
 #+PROPERTY: header-args:emacs-lisp :tangle yes :results silent
 * Introduction
