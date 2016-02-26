@@ -12,6 +12,21 @@
   haven't been able to find a way to export to JIRA. So I am attempting to
   write one, and learn about Emacs package development at the same time.
 
+* Usage
+
+  Currently this is not on Melpa, though I'll see about that once it does what
+  I want. Clone this repo and do one of:
+
+  #+BEGIN_EXAMPLE
+  M-x org-babel-load-file RET ox-jira.org RET
+  #+END_EXAMPLE
+
+  Or:
+
+  #+BEGIN_EXAMPLE
+  M-x load-file RET ox-jira.el RET
+  #+END_EXAMPLE
+
 * Maturity
 
   Very immature. Positively juvenile. Please don't laugh.
@@ -19,3 +34,18 @@
 * License
 
   GPL.
+* Contributing
+
+  Just fork, hack & send me a pull request! I'm happy to discuss work, and
+  since this is my first attempt at an Emacs package I've bound to have made
+  mistakes. Help me correct them!
+
+  I'm happy to consider any contributions, although I suggest you open an
+  issue to discuss any idea you have before undertaking any significant work,
+  as I may decide it is not where I want to take this project.
+
+  I am unlikely to merge any code changes without accompanying tests, but the
+  good news is that tests are very easy to write! The source and tests both
+  lives in =.org= files and is "tangled" into corresponding =.el= files.
+  Running the =./run-tests.sh= script automatically takes care of that
+  process. You'll need [[https://cask.github.io][Cask]] installed to run this script.
