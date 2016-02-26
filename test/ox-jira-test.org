@@ -197,6 +197,28 @@
      3. fum" 'jira))))
    #+END_SRC
 
+   Ok, we handle flat lists. How about nested ones?
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/nested-lists()
+       (should (equal "* fi
+     ,** fo
+     ,*** fa
+     ,**** fum
+     " (org-export-string-as "- fi
+       - fo
+         - fa
+           - fum" 'jira)))
+       (should (equal "* fi
+     ,*# fo
+     ,*#* fa
+     ,*#*# fum
+     " (org-export-string-as "- fi
+       1. fo
+         - fa
+           1. fum" 'jira))))
+   #+END_SRC
+
    Right! That was simple enough. Let's add some checkboxes.
 
    #+BEGIN_SRC emacs-lisp
@@ -211,15 +233,13 @@
 
    #+BEGIN_SRC emacs-lisp
      (ert-deftest ox-jira-test/checkboxes-and-statistics()
-       (should (equal "h1. Progress \\[50%]
-     ,* (x) fi
-     ,* (/) fo
-     " (org-export-string-as "* Progress [50%]
-     - [ ] fi
-     - [X] fo" 'jira))))
+       (should (equal "* (i) Progress \\[50%]
+     ,** (x) fi
+     ,** (/) fo
+     " (org-export-string-as "- [-] Progress [50%]
+       - [ ] fi
+       - [X] fo" 'jira))))
    #+END_SRC
-
-
 
 ** Source code
 

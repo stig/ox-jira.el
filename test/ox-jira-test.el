@@ -103,6 +103,24 @@ fum" 'jira))))
 3. fa
 3. fum" 'jira))))
 
+(ert-deftest ox-jira-test/nested-lists()
+  (should (equal "* fi
+** fo
+*** fa
+**** fum
+" (org-export-string-as "- fi
+  - fo
+    - fa
+      - fum" 'jira)))
+  (should (equal "* fi
+*# fo
+*#* fa
+*#*# fum
+" (org-export-string-as "- fi
+  1. fo
+    - fa
+      1. fum" 'jira))))
+
 (ert-deftest ox-jira-test/unordered-list-with-checkboxes()
   (should (equal "* (x) fi
 * (/) fo
@@ -110,12 +128,12 @@ fum" 'jira))))
 - [X] fo" 'jira))))
 
 (ert-deftest ox-jira-test/checkboxes-and-statistics()
-  (should (equal "h1. Progress \\[50%]
-* (x) fi
-* (/) fo
-" (org-export-string-as "* Progress [50%]
-- [ ] fi
-- [X] fo" 'jira))))
+  (should (equal "* (i) Progress \\[50%]
+** (x) fi
+** (/) fo
+" (org-export-string-as "- [-] Progress [50%]
+  - [ ] fi
+  - [X] fo" 'jira))))
 
 (ert-deftest ox-jira-test/src-blocks ()
   (should (equal "{code:none}

@@ -137,20 +137,33 @@ CONTENTS is the text with italic markup. INFO is a plist holding
 contextual information."
   (format "_%s_" contents))
 
+(defun org-jira--list-type-path (item)
+  (when (and item (eq 'item (org-element-type item)))
+    (let* ((list (org-element-property :parent item))
+           (list-type (org-element-property :type list)))
+      (cons list-type (org-jira--list-type-path
+                       (org-element-property :parent list))))))
+
+(defun org-jira--bullet-string (list-type-path)
+  (apply 'string
+         (mapcar (lambda (x) (if (eq x 'ordered) ?# ?*))
+                 list-type-path)))
+
 (defun org-jira-item (item contents info)
   "Transcode ITEM from Org to JIRA.
 CONTENTS is the text with item markup. INFO is a plist holding
 contextual information."
-  (let* ((parent (org-element-property :parent item))
-         (list-type (org-element-property :type parent))
+  (let* ((list-type-path (org-jira--list-type-path item))
+         (bullet-string (org-jira--bullet-string (reverse list-type-path)))
          (checkbox (case (org-element-property :checkbox item)
-                     (on "(/) ")
-                     (off "(x) ")
-                     (trans "(i) "))))
+                     (on "(/)")
+                     (off "(x)")
+                     (trans "(i)"))))
     (concat
-     (if (eq list-type 'ordered) "#" "*")
+     bullet-string
      " "
-     checkbox
+     (when checkbox
+       (concat checkbox " "))
      contents)))
 
 (defun org-jira-link (link desc info)
