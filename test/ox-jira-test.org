@@ -138,6 +138,18 @@
      ,*** third level" 'jira))))
    #+END_SRC
 
+** Links
+
+   JIRA supports many types of links. I don't expect we support them all.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/links ()
+       (should (equal "fi [http://jira.atlassian.com] fo\n"
+                      (org-export-string-as "fi [[http://jira.atlassian.com]] fo" 'jira)))
+       (should (equal "fi [Jira|http://jira.atlassian.com] fo\n"
+                      (org-export-string-as "fi [[http://jira.atlassian.com][Jira]] fo" 'jira))))
+   #+END_SRC
+
 ** Paragraphs
 
    Check that text in paragraphs does not have hard newlines.

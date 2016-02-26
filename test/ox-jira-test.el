@@ -70,6 +70,12 @@ h3. third level
 ** second level
 *** third level" 'jira))))
 
+(ert-deftest ox-jira-test/links ()
+  (should (equal "fi [http://jira.atlassian.com] fo\n"
+                 (org-export-string-as "fi [[http://jira.atlassian.com]] fo" 'jira)))
+  (should (equal "fi [Jira|http://jira.atlassian.com] fo\n"
+                 (org-export-string-as "fi [[http://jira.atlassian.com][Jira]] fo" 'jira))))
+
 (ert-deftest ox-jira-test/paragraphs ()
   (should (equal "fi fo fa fum\n" (org-export-string-as "fi
 fo

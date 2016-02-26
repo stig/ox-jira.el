@@ -68,7 +68,7 @@
     (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
     (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
     (line-break . (lambda (&rest args) (org-jira--not-implemented 'line-break)))
-    (link . (lambda (&rest args) (org-jira--not-implemented 'link)))
+    (link . org-jira-link)
     (node-property . (lambda (&rest args) (org-jira--not-implemented 'node-property)))
     (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
     (paragraph . org-jira-paragraph)
@@ -157,6 +157,29 @@ contextual information."
      " "
      checkbox
      contents)))
+
+(defun org-jira-link (link desc info)
+  "Transcode a LINK object from Org to JIRA.
+
+DESC is the description part of the link, or the empty string.
+INFO is a plist holding contextual information.  See
+`org-export-data'."
+  (let* ((type (org-element-property :type link))
+         (raw-path (org-element-property :path link))
+         (desc (and (not (string= desc "")) desc))
+         (path (cond
+                ((member type '("http" "https" "ftp" "mailto" "doi"))
+                 (concat type ":" raw-path))
+                ((string= type "file")
+                 (org-export-file-uri raw-path))
+                (t raw-path))))
+    (cond
+     ;; Link with description
+     ((and path desc) (format "[%s|%s]" desc path))
+     ;; Link without description
+     (path (format "[%s]" path))
+     ;; Link with only description?!
+     (t desc))))
 
 (defun org-jira-underline (underline contents info)
   "Transcode UNDERLINE from Org to JIRA.
