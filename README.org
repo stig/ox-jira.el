@@ -1,21 +1,21 @@
-* ox-jira - an Org export backend for JIRA
+#+TITLE: ox-jira.el --- JIRA Backend for Org Export Engine
+#+AUTHOR: Stig Brautaset
+* Introduction
 
   Export Org mode files to JIRA markup for pasting into JIRA tickets &
   comments.
 
-** Motivation
+  My last three jobs I've had to use JIRA, and had to deal with its (to me)
+  incredibly unintuitive markup format. Having discovered---and fallen in
+  love with---Org mode I now find myself writing everything in Org and
+  exporting to various other formats (html, markdown, plain text) but I
+  haven't been able to find a way to export to JIRA. So I am attempting to
+  write one, and learn about Emacs package development at the same time.
 
-   My last three jobs I've had to use JIRA, and had to deal with its (to me)
-   incredibly unintuitive markup format. Having discovered---and fallen in
-   love with---Org mode I now find myself writing everything in Org and
-   exporting to various other formats (html, markdown, plain text) but I
-   haven't been able to find a way to export to JIRA. So I am attempting to
-   write one, and learn about Emacs package development at the same time.
+* Maturity
 
-** Maturity
+  Very immature. Positively juvenile. Please don't laugh.
 
-   Very immature. Positively juvenile. Please don't laugh.
+* License
 
-** License
-
-   Let's say MIT, shall we? Can I? I'm not even sure.
+  GPL.
