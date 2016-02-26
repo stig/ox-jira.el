@@ -77,7 +77,7 @@
     (section . org-jira-section)
     (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
     (src-block . org-jira-src-block)
-    (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
+    (statistics-cookie . org-jira-statistics-cookie)
     (strike-through . org-jira-strike-through)
     (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
     (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
@@ -218,6 +218,11 @@ contextual information."
       (format "{code:%s}\n%s{code}"
               lang
               code))))
+
+(defun org-jira-statistics-cookie (statistics-cookie _contents _info)
+  "Transcode a STATISTICS-COOKIE object from Org to JIRA.
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (format "\\%s" (org-element-property :value statistics-cookie)))
 
 (defun org-jira-strike-through (strike-through contents info)
   "Transcode STRIKE-THROUGH from Org to JIRA.

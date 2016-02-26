@@ -109,6 +109,14 @@ fum" 'jira))))
 " (org-export-string-as "- [ ] fi
 - [X] fo" 'jira))))
 
+(ert-deftest ox-jira-test/checkboxes-and-statistics()
+  (should (equal "h1. Progress \\[50%]
+* (x) fi
+* (/) fo
+" (org-export-string-as "* Progress [50%]
+- [ ] fi
+- [X] fo" 'jira))))
+
 (ert-deftest ox-jira-test/src-blocks ()
   (should (equal "{code:none}
 echo hello

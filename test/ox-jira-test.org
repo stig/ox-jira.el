@@ -207,6 +207,20 @@
      - [X] fo" 'jira))))
    #+END_SRC
 
+   Ok, now add statistics cookies...
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/checkboxes-and-statistics()
+       (should (equal "h1. Progress \\[50%]
+     ,* (x) fi
+     ,* (/) fo
+     " (org-export-string-as "* Progress [50%]
+     - [ ] fi
+     - [X] fo" 'jira))))
+   #+END_SRC
+
+
+
 ** Source code
 
    I use Org mode for literate programming, and executable lab notes, so we

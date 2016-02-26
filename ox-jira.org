@@ -167,7 +167,7 @@
          (section . org-jira-section)
          (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
          (src-block . org-jira-src-block)
-         (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
+         (statistics-cookie . org-jira-statistics-cookie)
          (strike-through . org-jira-strike-through)
          (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
          (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
@@ -239,7 +239,7 @@
       information."
         (when (org-string-nw-p (org-element-property :value example-block))
           (format "{noformat}\n%s{noformat}"
-                  (org-export-format-code-default example-block info)))) 
+                  (org-export-format-code-default example-block info))))
     #+END_SRC
 
 *** Headline
@@ -416,6 +416,17 @@
             (format "{code:%s}\n%s{code}"
                     lang
                     code))))
+    #+END_SRC
+
+*** Statistics Cookie
+
+    This is updated to show progress of subsequent list of check boxes.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-statistics-cookie (statistics-cookie _contents _info)
+        "Transcode a STATISTICS-COOKIE object from Org to JIRA.
+      CONTENTS is nil.  INFO is a plist holding contextual information."
+        (format "\\%s" (org-element-property :value statistics-cookie)))
     #+END_SRC
 
 *** Strike-Through
