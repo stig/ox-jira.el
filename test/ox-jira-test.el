@@ -107,6 +107,19 @@ echo hello
      #+end_src
 " 'jira))))
 
+(ert-deftest ox-jira-test/example-blocks ()
+  (should (equal "{noformat}
+stuff that should
+ not be
+formatted
+{noformat}
+" (org-export-string-as "#+begin_example
+stuff that should
+ not be
+formatted
+#+end_example
+" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here

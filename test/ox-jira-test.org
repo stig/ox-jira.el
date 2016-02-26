@@ -191,7 +191,27 @@
           echo hello
           # echo world
           ,#+end_src
-     " 'jira)))) 
+     " 'jira))))
+   #+END_SRC
+
+** Examples
+
+   I use example blocks for log & config file snippets, and output from
+   programs.
+
+      #+BEGIN_SRC emacs-lisp
+        (ert-deftest ox-jira-test/example-blocks ()
+          (should (equal "{noformat}
+        stuff that should
+         not be
+        formatted
+        {noformat}
+        " (org-export-string-as "#+begin_example
+        stuff that should
+         not be
+        formatted
+        ,#+end_example
+        " 'jira))))
    #+END_SRC
 
 ** Provide

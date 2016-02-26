@@ -50,6 +50,7 @@
     (drawer . (lambda (&rest args) (org-jira--not-implemented 'drawer)))
     (dynamic-block . (lambda (&rest args) (org-jira--not-implemented 'dynamic-block)))
     (entity . (lambda (&rest args) (org-jira--not-implemented 'entity)))
+    (example-block . org-jira-example-block)
     (export-block . (lambda (&rest args) (org-jira--not-implemented 'export-block)))
     (export-snippet . (lambda (&rest args) (org-jira--not-implemented 'export-snippet)))
     (final-output . (lambda (&rest args) (org-jira--not-implemented 'final-output)))
@@ -115,6 +116,14 @@ CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value code)))
 
+(defun org-jira-example-block (example-block contents info)
+  "Transcode an EXAMPLE-BLOCK element from Org to Jira.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (when (org-string-nw-p (org-element-property :value example-block))
+    (format "{noformat}\n%s{noformat}"
+            (org-export-format-code-default example-block info))))
+
 (defun org-jira-headline (headline contents info)
   "Transcode a HEADLINE element from Org to JIRA.
 CONTENTS is the contents of the headline, as a string.  INFO is
@@ -178,7 +187,7 @@ CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
     (let* ((lang (org-element-property :language src-block))
-           (code (car (org-export-unravel-code src-block))))
+           (code (org-export-format-code-default src-block info)))
       (format "{code:%s}\n%s{code}" lang code))))
 
 (defun org-jira-quote-block (quote-block contents info)
