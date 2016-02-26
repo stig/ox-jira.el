@@ -144,9 +144,9 @@ contextual information."
   (let* ((parent (org-element-property :parent item))
          (list-type (org-element-property :type parent))
          (checkbox (case (org-element-property :checkbox item)
-                     (on "{{[X]}} ")
-                     (off "{{[ ]}} ")
-                     (trans "{{[-]}} "))))
+                     (on "(/) ")
+                     (off "(x) ")
+                     (trans "(i) "))))
     (concat
      (if (eq list-type 'ordered) "#" "*")
      " "

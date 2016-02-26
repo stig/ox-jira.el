@@ -104,8 +104,8 @@ fum" 'jira))))
 3. fum" 'jira))))
 
 (ert-deftest ox-jira-test/unordered-list-with-checkboxes()
-  (should (equal "* {{[ ]}} fi
-* {{[X]}} fo
+  (should (equal "* (x) fi
+* (/) fo
 " (org-export-string-as "- [ ] fi
 - [X] fo" 'jira))))
 
