@@ -78,7 +78,7 @@
     (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
     (src-block . org-jira-src-block)
     (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
-    (strike-through . (lambda (&rest args) (org-jira--not-implemented 'strike-through)))
+    (strike-through . org-jira-strike-through)
     (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
     (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
     (table . (lambda (&rest args) (org-jira--not-implemented 'table)))
@@ -218,6 +218,12 @@ contextual information."
       (format "{code:%s}\n%s{code}"
               lang
               code))))
+
+(defun org-jira-strike-through (strike-through contents info)
+  "Transcode STRIKE-THROUGH from Org to JIRA.
+CONTENTS is the text with strike-through markup. INFO is a plist holding
+contextual information."
+  (format "-%s-" contents))
 
 (defun org-jira-quote-block (quote-block contents info)
   "Transcode a QUOTE-BLOCK element from Org to Jira.
