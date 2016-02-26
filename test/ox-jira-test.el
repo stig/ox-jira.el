@@ -96,6 +96,17 @@ h3. third level
 3. fa
 3. fum" 'jira))))
 
+(ert-deftest ox-jira-test/src-blocks ()
+  (should (equal "{code:sh}
+echo hello
+# echo world
+{code}
+" (org-export-string-as "#+begin_src sh
+     echo hello
+     # echo world
+     #+end_src
+" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here

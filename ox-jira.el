@@ -80,7 +80,7 @@
     (radio-target . (lambda (&rest args) (org-jira--not-implemented 'radio-target)))
     (section . org-jira-section)
     (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
-    (src-block . (lambda (&rest args) (org-jira--not-implemented 'src-block)))
+    (src-block . org-jira-src-block)
     (statistics-cookie . (lambda (&rest args) (org-jira--not-implemented 'statistics-cookie)))
     (strike-through . (lambda (&rest args) (org-jira--not-implemented 'strike-through)))
     (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
@@ -171,6 +171,15 @@ the plist used as a communication channel."
 CONTENTS is the contents of the section, as a string.  INFO is
 the plist used as a communication channel."
   contents)
+
+(defun org-jira-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element from Org to Jira.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (when (org-string-nw-p (org-element-property :value src-block))
+    (let* ((lang (org-element-property :language src-block))
+           (code (car (org-export-unravel-code src-block))))
+      (format "{code:%s}\n%s{code}" lang code))))
 
 (defun org-jira-quote-block (quote-block contents info)
   "Transcode a QUOTE-BLOCK element from Org to Jira.

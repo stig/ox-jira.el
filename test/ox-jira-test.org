@@ -176,6 +176,24 @@
      3. fum" 'jira))))
    #+END_SRC
 
+** Source code
+
+   I use Org mode for literate programming, and executable lab notes, so we
+   need to export source code.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/src-blocks ()
+       (should (equal "{code:sh}
+     echo hello
+     # echo world
+     {code}
+     " (org-export-string-as "#+begin_src sh
+          echo hello
+          # echo world
+          ,#+end_src
+     " 'jira)))) 
+   #+END_SRC
+
 ** Provide
 
    Announce that =ox-jira-test= is a feature of the current Emacs.
