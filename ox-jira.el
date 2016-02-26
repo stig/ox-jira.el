@@ -59,7 +59,7 @@
     (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
     (italic . org-jira-italic)
     (item . org-jira-item)
-    (keyword . (lambda (&rest args) (org-jira--not-implemented 'keyword)))
+    (keyword . (lambda (&rest args) ""))
     (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
     (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
     (line-break . (lambda (&rest args) (org-jira--not-implemented 'line-break)))

@@ -66,6 +66,11 @@ h3. third level
 ** second level
 *** third level" 'jira))))
 
+(ert-deftest ox-jira-test/keywords()
+  (should (equal "" (org-export-string-as "#+TITLE: MyTitle
+#+DATE: 2016-02-26
+#+OPTIONS: f:t" 'jira))))
+
 (ert-deftest ox-jira-test/links ()
   (should (equal "fi [http://jira.atlassian.com] fo\n"
                  (org-export-string-as "fi [[http://jira.atlassian.com]] fo" 'jira)))
