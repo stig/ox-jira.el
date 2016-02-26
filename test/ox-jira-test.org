@@ -176,6 +176,16 @@
      3. fum" 'jira))))
    #+END_SRC
 
+   Right! That was simple enough. Let's add some checkboxes.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/unordered-list-with-checkboxes()
+       (should (equal "- {{[ ]}} fi
+     - {{[X]}} fo
+     " (org-export-string-as "- [ ] fi
+     - [X] fo" 'jira))))
+   #+END_SRC
+
 ** Source code
 
    I use Org mode for literate programming, and executable lab notes, so we

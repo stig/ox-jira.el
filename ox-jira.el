@@ -147,9 +147,16 @@ contextual information."
 CONTENTS is the text with item markup. INFO is a plist holding
 contextual information."
   (let* ((parent (org-element-property :parent item))
-         (list-type (org-element-property :type parent)))
-    (format "%s %s" (if (eq list-type 'ordered) "#" "-")
-                        contents)))
+         (list-type (org-element-property :type parent))
+         (checkbox (case (org-element-property :checkbox item)
+                     (on "{{[X]}} ")
+                     (off "{{[ ]}} ")
+                     (trans "{{[-]}} "))))
+    (concat
+     (if (eq list-type 'ordered) "#" "-")
+     " "
+     checkbox
+     contents)))
 
 (defun org-jira-underline (underline contents info)
   "Transcode UNDERLINE from Org to JIRA.

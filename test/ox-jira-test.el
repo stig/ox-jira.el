@@ -96,6 +96,12 @@ h3. third level
 3. fa
 3. fum" 'jira))))
 
+(ert-deftest ox-jira-test/unordered-list-with-checkboxes()
+  (should (equal "- {{[ ]}} fi
+- {{[X]}} fo
+" (org-export-string-as "- [ ] fi
+- [X] fo" 'jira))))
+
 (ert-deftest ox-jira-test/src-blocks ()
   (should (equal "{code:sh}
 echo hello
