@@ -174,7 +174,7 @@ channel."
   "Transcode a PARAGRAPH element from Org to JIRA.
 CONTENTS is the contents of the paragraph, as a string.  INFO is
 the plist used as a communication channel."
-  (replace-regexp-in-string "\n[^\']" " " contents))
+  (replace-regexp-in-string "\n\\([^\']\\)" " \\1" contents))
 
 (defun org-jira-plain-list (plain-list contents info)
   "Transcode PLAIN-LIST from Org to JIRA.

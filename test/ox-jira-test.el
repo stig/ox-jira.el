@@ -72,9 +72,9 @@ h3. third level
 
 (ert-deftest ox-jira-test/paragraphs ()
   (should (equal "fi fo fa fum\n" (org-export-string-as "fi
-,fo
-,fa
-,fum" 'jira))))
+fo
+fa
+fum" 'jira))))
 
 (ert-deftest ox-jira-test/unordered-lists()
   (should (equal "- fi

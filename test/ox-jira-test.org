@@ -145,9 +145,9 @@
    #+BEGIN_SRC emacs-lisp
      (ert-deftest ox-jira-test/paragraphs ()
        (should (equal "fi fo fa fum\n" (org-export-string-as "fi
-     ,fo
-     ,fa
-     ,fum" 'jira))))
+     fo
+     fa
+     fum" 'jira))))
    #+END_SRC
 
 ** Plain lists
