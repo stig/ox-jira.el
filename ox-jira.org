@@ -399,6 +399,10 @@
 
 *** Source code block
 
+    JIRA supports formatting for these languages: actionscript, html, java,
+    javascript, sql, xhtml, xml. If none of them fits, we can use 'none',
+    which I imagine will be a bit like ={noformat}=.
+
     #+BEGIN_SRC emacs-lisp
       (defun org-jira-src-block (src-block contents info)
         "Transcode a SRC-BLOCK element from Org to Jira.
@@ -406,8 +410,12 @@
       contextual information."
         (when (org-string-nw-p (org-element-property :value src-block))
           (let* ((lang (org-element-property :language src-block))
+                 (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml"))
+                           lang "none"))
                  (code (org-export-format-code-default src-block info)))
-            (format "{code:%s}\n%s{code}" lang code))))
+            (format "{code:%s}\n%s{code}"
+                    lang
+                    code))))
     #+END_SRC
 *** Quote block
 

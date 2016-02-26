@@ -212,8 +212,12 @@ CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
     (let* ((lang (org-element-property :language src-block))
+           (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml"))
+                     lang "none"))
            (code (org-export-format-code-default src-block info)))
-      (format "{code:%s}\n%s{code}" lang code))))
+      (format "{code:%s}\n%s{code}"
+              lang
+              code))))
 
 (defun org-jira-quote-block (quote-block contents info)
   "Transcode a QUOTE-BLOCK element from Org to Jira.

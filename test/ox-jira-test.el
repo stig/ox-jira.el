@@ -104,13 +104,24 @@ fum" 'jira))))
 - [X] fo" 'jira))))
 
 (ert-deftest ox-jira-test/src-blocks ()
-  (should (equal "{code:sh}
+  (should (equal "{code:none}
 echo hello
 # echo world
 {code}
 " (org-export-string-as "#+begin_src sh
      echo hello
      # echo world
+     #+end_src
+" 'jira)))
+  (should (equal "{code:sql}
+BEGIN;
+SELECT NOW();
+END;
+{code}
+" (org-export-string-as "#+begin_src sql
+     BEGIN;
+     SELECT NOW();
+     END;
      #+end_src
 " 'jira))))
 
