@@ -148,7 +148,7 @@ contextual information."
                      (off "{{[ ]}} ")
                      (trans "{{[-]}} "))))
     (concat
-     (if (eq list-type 'ordered) "#" "-")
+     (if (eq list-type 'ordered) "#" "*")
      " "
      checkbox
      contents)))
