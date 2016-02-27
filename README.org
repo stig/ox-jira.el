@@ -2,8 +2,8 @@
 #+AUTHOR: Stig Brautaset
 * Introduction
 
-  Export Org mode files to JIRA markup for pasting into JIRA tickets &
-  comments.
+  This module plugs into the regular Org Export Engine and transforms Org
+  files to JIRA markup for pasting into JIRA tickets & comments.
 
   My last three jobs I've had to use JIRA, and had to deal with its (to me)
   incredibly unintuitive markup format. Having discovered---and fallen in
@@ -15,7 +15,7 @@
 * Usage
 
   Currently this is not on Melpa, though I'll see about that once it does what
-  I want. Clone this repo and do one of:
+  I want. For now you can clone this repo and do one of:
 
   #+BEGIN_EXAMPLE
   M-x org-babel-load-file RET ox-jira.org RET
@@ -31,21 +31,36 @@
 
   Very immature. Positively juvenile. Please don't laugh.
 
+  Saying that, it now does pretty much everything I need it to. YMMV :-)
+
 * License
 
-  GPL.
+  Copyright (C) 2016 Stig Brautaset
+
+  This program is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the Free
+  Software Foundation, either version 3 of the License, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+  more details.
+
+  You should have received a copy of the GNU General Public License along with
+  this program. If not, see <http://www.gnu.org/licenses/>.
+
 * Contributing
 
-  Just fork, hack & send me a pull request! I'm happy to discuss work, and
-  since this is my first attempt at an Emacs package I've bound to have made
-  mistakes. Help me correct them!
+  I'm happy to consider contributions. Since this is my first attempt at an
+  Emacs package I've bound to have made lots of mistakes. Help me correct
+  them, and keep the pull requests coming!
 
-  I'm happy to consider any contributions, although I suggest you open an
-  issue to discuss any idea you have before undertaking any significant work,
-  as I may decide it is not where I want to take this project.
+  Code contributions have _a lot_ better chance of being merged if they come
+  with tests. However, code contributions are not everything. Opening an issue
+  with a reproducible test case, like "I expected this but got this" is also a
+  valuable contribution.
 
-  I am unlikely to merge any code changes without accompanying tests, but the
-  good news is that tests are very easy to write! The source and tests both
-  lives in =.org= files and is "tangled" into corresponding =.el= files.
-  Running the =./run-tests.sh= script automatically takes care of that
-  process. You'll need [[https://cask.github.io][Cask]] installed to run this script.
+  The source and tests both lives in =.org= files and is "tangled" into
+  corresponding =.el= files. Running the =./run-tests.sh= script automatically
+  takes care of that process. You'll need [[https://cask.github.io][Cask]] installed to run this script.
