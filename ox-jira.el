@@ -249,8 +249,14 @@ contextual information."
   "Transcode a TABLE-CELL element from Org to JIRA.
 CONTENTS holds the contents of the table-cell.  INFO is a plist holding
 contextual information."
-  (concat (format "| %s " contents)
-          (if (org-export-last-sibling-p table-cell info) "|" "")))
+  (let* ((row (org-element-property :parent table-cell))
+         (table (org-element-property :parent row))
+         (has-header (org-export-table-has-header-p table info))
+         (group (org-export-table-row-group row info))
+         (is-header (and has-header (eq 1 group)))
+         (sep (if is-header "||" "|")))
+    (format "%s %s %s" sep contents
+            (if (org-export-last-sibling-p table-cell info) sep ""))))
 
 (defun org-jira-statistics-cookie (statistics-cookie _contents _info)
   "Transcode a STATISTICS-COOKIE object from Org to JIRA.

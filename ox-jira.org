@@ -481,15 +481,24 @@
           (format "%s\n" contents)))
     #+END_SRC
 
-    And table cells:
+    The cell itself does not know if it is a header cell or not, so we have to
+    ask its containing row if it is the first row, and the table if it has a
+    header row at all. If those things are true, make the cell a header cell.
 
     #+BEGIN_SRC emacs-lisp
       (defun org-jira-table-cell (table-cell contents info)
         "Transcode a TABLE-CELL element from Org to JIRA.
       CONTENTS holds the contents of the table-cell.  INFO is a plist holding
       contextual information."
-        (concat (format "| %s " contents)
-                (if (org-export-last-sibling-p table-cell info) "|" "")))
+        ;;  (pp table-cell)
+        (let* ((row (org-element-property :parent table-cell))
+               (table (org-element-property :parent row))
+               (has-header (org-export-table-has-header-p table info))
+               (group (org-export-table-row-group row info))
+               (is-header (and has-header (eq 1 group)))
+               (sep (if is-header "||" "|")))
+          (format "%s %s %s" sep contents
+                  (if (org-export-last-sibling-p table-cell info) sep ""))))
     #+END_SRC
 
 

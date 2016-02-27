@@ -171,7 +171,7 @@ END;
   ;;
   ;; but I haven't figured out how to identify the header row yet. This test
   ;; checks that we at least ignore the horizontal lines.
-  (should (equal "| a | b |
+  (should (equal "|| a || b ||
 | c | d |
 " (org-export-string-as "
 | a | b |
