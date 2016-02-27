@@ -81,9 +81,9 @@
     (strike-through . org-jira-strike-through)
     (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
     (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
-    (table . (lambda (&rest args) (org-jira--not-implemented 'table)))
-    (table-cell . (lambda (&rest args) (org-jira--not-implemented 'table-cell)))
-    (table-row . (lambda (&rest args) (org-jira--not-implemented 'table-row)))
+    (table . org-jira-table)
+    (table-cell . org-jira-table-cell)
+    (table-row . org-jira-table-row)
     (target . (lambda (&rest args) (org-jira--not-implemented 'target)))
     (timestamp . (lambda (&rest args) (org-jira--not-implemented 'timestamp)))
     (underline . org-jira-underline)
@@ -231,6 +231,26 @@ contextual information."
       (format "{code:%s}\n%s{code}"
               lang
               code))))
+
+(defun org-jira-table (table contents info)
+  "Transcode a TABLE element from Org to JIRA.
+CONTENTS holds the contents of the table.  INFO is a plist holding
+contextual information."
+  contents)
+
+(defun org-jira-table-row (table-row contents info)
+  "Transcode a TABLE-ROW element from Org to JIRA.
+CONTENTS holds the contents of the table-row.  INFO is a plist holding
+contextual information."
+  (when (eq 'standard (org-element-property :type table-row))
+    (format "%s\n" contents)))
+
+(defun org-jira-table-cell (table-cell contents info)
+  "Transcode a TABLE-CELL element from Org to JIRA.
+CONTENTS holds the contents of the table-cell.  INFO is a plist holding
+contextual information."
+  (concat (format "| %s " contents)
+          (if (org-export-last-sibling-p table-cell info) "|" "")))
 
 (defun org-jira-statistics-cookie (statistics-cookie _contents _info)
   "Transcode a STATISTICS-COOKIE object from Org to JIRA.

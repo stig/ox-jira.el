@@ -171,9 +171,9 @@
          (strike-through . org-jira-strike-through)
          (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
          (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
-         (table . (lambda (&rest args) (org-jira--not-implemented 'table)))
-         (table-cell . (lambda (&rest args) (org-jira--not-implemented 'table-cell)))
-         (table-row . (lambda (&rest args) (org-jira--not-implemented 'table-row)))
+         (table . org-jira-table)
+         (table-cell . org-jira-table-cell)
+         (table-row . org-jira-table-row)
          (target . (lambda (&rest args) (org-jira--not-implemented 'target)))
          (timestamp . (lambda (&rest args) (org-jira--not-implemented 'timestamp)))
          (underline . org-jira-underline)
@@ -440,6 +440,58 @@
                     lang
                     code))))
     #+END_SRC
+
+*** Table
+
+    Org's table editor is one of the many reasons to use Org. It is excellent.
+    Org and JIRA's tables are quite similar. Where Org marks tables up like
+    this:
+
+    : | Name   | Score |
+    : |--------+-------|
+    : | Ashley |     2 |
+    : | Alex   |     3 |
+
+    Jira uses the following format:
+
+    : || Name  || Score ||
+    : | Ashley | 2 |
+    : | Alex   | 3 |
+
+    Tables are complex beasts. I only hope to support very simple ones. Looks
+    like most of the logic will live in the row and cell transcoding functions.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-table (table contents info)
+        "Transcode a TABLE element from Org to JIRA.
+      CONTENTS holds the contents of the table.  INFO is a plist holding
+      contextual information."
+        contents)
+    #+END_SRC
+
+    We only want to output =standard= rows, not horizontal lines. I'm not sure
+    if detection of header rows belong here or in the cells.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-table-row (table-row contents info)
+        "Transcode a TABLE-ROW element from Org to JIRA.
+      CONTENTS holds the contents of the table-row.  INFO is a plist holding
+      contextual information."
+        (when (eq 'standard (org-element-property :type table-row))
+          (format "%s\n" contents)))
+    #+END_SRC
+
+    And table cells:
+
+    #+BEGIN_SRC emacs-lisp
+      (defun org-jira-table-cell (table-cell contents info)
+        "Transcode a TABLE-CELL element from Org to JIRA.
+      CONTENTS holds the contents of the table-cell.  INFO is a plist holding
+      contextual information."
+        (concat (format "| %s " contents)
+                (if (org-export-last-sibling-p table-cell info) "|" "")))
+    #+END_SRC
+
 
 *** Statistics Cookie
 

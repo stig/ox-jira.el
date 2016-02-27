@@ -157,6 +157,28 @@ END;
      #+end_src
 " 'jira))))
 
+(ert-deftest ox-jira-test/tables ()
+  (should (equal "| a | b |
+| c | d |
+" (org-export-string-as "
+| a | b |
+| c | d |
+" 'jira)))
+
+  ;; This should really be
+  ;; : || a || b ||
+  ;; : | c | d |
+  ;;
+  ;; but I haven't figured out how to identify the header row yet. This test
+  ;; checks that we at least ignore the horizontal lines.
+  (should (equal "| a | b |
+| c | d |
+" (org-export-string-as "
+| a | b |
+|---+---|
+| c | d |
+" 'jira))))
+
 (ert-deftest ox-jira-test/example-blocks ()
   (should (equal "{noformat}
 stuff that should

@@ -270,6 +270,35 @@
      " 'jira))))
    #+END_SRC
 
+** Tables
+
+   The holy grail. Do me proud, Orgmode!
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/tables ()
+       (should (equal "| a | b |
+     | c | d |
+     " (org-export-string-as "
+     | a | b |
+     | c | d |
+     " 'jira)))
+
+       ;; This should really be
+       ;; : || a || b ||
+       ;; : | c | d |
+       ;;
+       ;; but I haven't figured out how to identify the header row yet. This test
+       ;; checks that we at least ignore the horizontal lines.
+       (should (equal "| a | b |
+     | c | d |
+     " (org-export-string-as "
+     | a | b |
+     |---+---|
+     | c | d |
+     " 'jira))))
+   #+END_SRC
+
+
 ** Examples
 
    I use example blocks for log & config file snippets, and output from
