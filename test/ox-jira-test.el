@@ -137,6 +137,12 @@ fum" 'jira))))
   - [ ] fi
   - [X] fo" 'jira))))
 
+(ert-deftest ox-jira-test/definition-lists()
+  (should (equal "* *fi*: fo
+* *fa*: fum
+" (org-export-string-as "- fi :: fo
+- fa :: fum" 'jira))))
+
 (ert-deftest ox-jira-test/src-blocks ()
   (should (equal "{code:none}
 echo hello

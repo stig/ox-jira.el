@@ -293,6 +293,9 @@
     alternating plain-list and item nodes until there are no more, and extract
     their type. The type list is used to create a bullet string.
 
+    JIRA doesn't really have support for definition lists, so we fake it with
+    a bullet list and some bold text for the term.
+
     #+BEGIN_SRC emacs-lisp
       (defun org-jira--list-type-path (item)
         (when (and item (eq 'item (org-element-type item)))
@@ -312,6 +315,9 @@
       contextual information."
         (let* ((list-type-path (org-jira--list-type-path item))
                (bullet-string (org-jira--bullet-string (reverse list-type-path)))
+               (tag (let ((tag (org-element-property :tag item)))
+                      (when tag
+                        (org-export-data tag info))))
                (checkbox (case (org-element-property :checkbox item)
                            (on "(/)")
                            (off "(x)")
@@ -321,6 +327,8 @@
            " "
            (when checkbox
              (concat checkbox " "))
+           (when tag
+             (format "*%s*: " tag))
            contents)))
     #+END_SRC
 
@@ -429,7 +437,7 @@
     #+BEGIN_SRC emacs-lisp
       (defun org-jira-src-block (src-block contents info)
         "Transcode a SRC-BLOCK element from Org to Jira.
-      CONTENTS holds the contents of the item.  INFO is a plist holding
+      CONTENTS holds the contents of the src-block.  INFO is a plist holding
       contextual information."
         (when (org-string-nw-p (org-element-property :value src-block))
           (let* ((lang (org-element-property :language src-block))

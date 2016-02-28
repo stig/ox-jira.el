@@ -155,6 +155,9 @@ CONTENTS is the text with item markup. INFO is a plist holding
 contextual information."
   (let* ((list-type-path (org-jira--list-type-path item))
          (bullet-string (org-jira--bullet-string (reverse list-type-path)))
+         (tag (let ((tag (org-element-property :tag item)))
+                (when tag
+                  (org-export-data tag info))))
          (checkbox (case (org-element-property :checkbox item)
                      (on "(/)")
                      (off "(x)")
@@ -164,6 +167,8 @@ contextual information."
      " "
      (when checkbox
        (concat checkbox " "))
+     (when tag
+       (format "*%s*: " tag))
      contents)))
 
 (defun org-jira-link (link desc info)
@@ -221,7 +226,7 @@ the plist used as a communication channel."
 
 (defun org-jira-src-block (src-block contents info)
   "Transcode a SRC-BLOCK element from Org to Jira.
-CONTENTS holds the contents of the item.  INFO is a plist holding
+CONTENTS holds the contents of the src-block.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
     (let* ((lang (org-element-property :language src-block))

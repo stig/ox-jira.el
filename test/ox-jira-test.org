@@ -243,6 +243,17 @@
        - [X] fo" 'jira))))
    #+END_SRC
 
+   Definition lists are not directly supported by JIRA markup, but let's fake
+   it with a bullet list & some bold text.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/definition-lists()
+       (should (equal "* *fi*: fo
+     ,* *fa*: fum
+     " (org-export-string-as "- fi :: fo
+     - fa :: fum" 'jira))))
+   #+END_SRC
+
 ** Source code
 
    I use Org mode for literate programming, and executable lab notes, so we
