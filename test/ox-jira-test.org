@@ -9,8 +9,9 @@
 
 ** Short description
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :padline no
      ;;; ox-jira-test.el --- tests for ox-jira.el
+
    #+END_SRC
 
 ** Author

@@ -1,4 +1,3 @@
-
 ;;; ox-jira-test.el --- tests for ox-jira.el
 
 ;;; Author: Stig Brautaset <stig@brautaset.org>

@@ -21,8 +21,9 @@
 
 ** Short description
 
-   #+BEGIN_SRC emacs-lisp
-     ;;; ox-jira.el --- JIRA Backend for Org Export Engine -*- lexical-binding: j; -*-
+   #+BEGIN_SRC emacs-lisp :padline no
+     ;;; ox-jira.el --- JIRA Backend for Org Export Engine
+
    #+END_SRC
 
 ** Copyright & License
@@ -518,7 +519,6 @@
         "Transcode a TABLE-CELL element from Org to JIRA.
       CONTENTS holds the contents of the table-cell.  INFO is a plist holding
       contextual information."
-        ;;  (pp table-cell)
         (let* ((row (org-element-property :parent table-cell))
                (table (org-element-property :parent row))
                (has-header (org-export-table-has-header-p table info))
