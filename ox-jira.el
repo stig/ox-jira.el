@@ -79,8 +79,8 @@
     (src-block . org-jira-src-block)
     (statistics-cookie . org-jira-statistics-cookie)
     (strike-through . org-jira-strike-through)
-    (subscript . (lambda (&rest args) (org-jira--not-implemented 'subscript)))
-    (superscript . (lambda (&rest args) (org-jira--not-implemented 'superscript)))
+    (subscript . org-jira-subscript)
+    (superscript . org-jira-superscript)
     (table . org-jira-table)
     (table-cell . org-jira-table-cell)
     (table-row . org-jira-table-row)
@@ -231,6 +231,18 @@ contextual information."
       (format "{code:%s}\n%s{code}"
               lang
               code))))
+
+(defun org-jira-subscript (subscript contents info)
+  "Transcode SUBSCRIPT from Org to JIRA.
+CONTENTS is the text with subscript markup. INFO is a plist holding
+contextual information."
+  (format "~%s~" contents))
+
+(defun org-jira-superscript (superscript contents info)
+  "Transcode SUPERSCRIPT from Org to JIRA.
+CONTENTS is the text with superscript markup. INFO is a plist holding
+contextual information."
+  (format "^%s^" contents))
 
 (defun org-jira-table (table contents info)
   "Transcode a TABLE element from Org to JIRA.
