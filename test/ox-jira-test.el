@@ -142,6 +142,10 @@ fum" 'jira))))
 " (org-export-string-as "- fi :: fo
 - fa :: fum" 'jira))))
 
+(ert-deftest ox-jira-test/plain-text ()
+  (should (equal "fi fo \\[fa] fum
+" (org-export-string-as "fi fo [fa] fum" 'jira))))
+
 (ert-deftest ox-jira-test/src-blocks ()
   (should (equal "{code:none}
 echo hello

@@ -68,7 +68,7 @@
     (paragraph . org-jira-paragraph)
     (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
     (plain-list . org-jira-plain-list)
-    (plain-text . (lambda (plain-text info) plain-text))
+    (plain-text . org-jira-plain-text)
     (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
     (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
     (quote-block . org-jira-quote-block)
@@ -213,9 +213,17 @@ the plist used as a communication channel."
 
 (defun org-jira-plain-list (plain-list contents info)
   "Transcode PLAIN-LIST from Org to JIRA.
-      CONTENTS is the text with plain-list markup. INFO is a plist holding
-      contextual information."
+CONTENTS is the text with plain-list markup. INFO is a plist holding
+contextual information."
   contents)
+
+(defun org-jira-plain-text (text info)
+  "Transcode TEXT from Org to JIRA.
+TEXT is the string to transcode. INFO is a plist holding
+contextual information."
+  (replace-regexp-in-string "\\([[{]\\)"
+                            '(lambda (p) (format "\\%s" p))
+                            text))
 
 (defun org-jira-section (section contents info)
   "Transcode a SECTION element from Org to JIRA.

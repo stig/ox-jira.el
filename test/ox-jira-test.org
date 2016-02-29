@@ -255,6 +255,16 @@
      - fa :: fum" 'jira))))
    #+END_SRC
 
+** Plain text
+
+   Check that certain characters are escaped.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/plain-text ()
+       (should (equal "fi fo \\[fa] fum
+     " (org-export-string-as "fi fo [fa] fum" 'jira))))
+   #+END_SRC
+
 ** Source code
 
    I use Org mode for literate programming, and executable lab notes, so we
@@ -311,7 +321,6 @@
      | c | d |
      " 'jira))))
    #+END_SRC
-
 
 ** Examples
 
