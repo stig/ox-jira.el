@@ -34,83 +34,83 @@
 (require 'ox-publish)
 
 (org-export-define-backend 'jira
-  '((babel-call . (lambda (&rest args) (org-jira--not-implemented 'babel-call)))
-    (body . (lambda (&rest args) (org-jira--not-implemented 'body)))
-    (bold . org-jira-bold)
-    (center-block . (lambda (&rest args) (org-jira--not-implemented 'center-block)))
-    (clock . (lambda (&rest args) (org-jira--not-implemented 'clock)))
-    (code . org-jira-code)
-    (diary-sexpexample-block . (lambda (&rest args) (org-jira--not-implemented 'diary-sexpexample-block)))
-    (drawer . (lambda (&rest args) (org-jira--not-implemented 'drawer)))
-    (dynamic-block . (lambda (&rest args) (org-jira--not-implemented 'dynamic-block)))
-    (entity . (lambda (&rest args) (org-jira--not-implemented 'entity)))
-    (example-block . org-jira-example-block)
-    (export-block . (lambda (&rest args) (org-jira--not-implemented 'export-block)))
-    (export-snippet . (lambda (&rest args) (org-jira--not-implemented 'export-snippet)))
-    (final-output . (lambda (&rest args) (org-jira--not-implemented 'final-output)))
-    (fixed-width . (lambda (&rest args) (org-jira--not-implemented 'fixed-width)))
-    (footnote-definition . (lambda (&rest args) (org-jira--not-implemented 'footnote-definition)))
-    (footnote-reference . (lambda (&rest args) (org-jira--not-implemented 'footnote-reference)))
-    (headline . org-jira-headline)
-    (horizontal-rule . (lambda (&rest args) (org-jira--not-implemented 'horizontal-rule)))
-    (inline-babel-call . (lambda (&rest args) (org-jira--not-implemented 'inline-babel-call)))
-    (inline-src-block . (lambda (&rest args) (org-jira--not-implemented 'inline-src-block)))
-    (inlinetask . (lambda (&rest args) (org-jira--not-implemented 'inlinetask)))
-    (italic . org-jira-italic)
-    (item . org-jira-item)
+  '((babel-call . (lambda (&rest args) (ox-jira--not-implemented 'babel-call)))
+    (body . (lambda (&rest args) (ox-jira--not-implemented 'body)))
+    (bold . ox-jira-bold)
+    (center-block . (lambda (&rest args) (ox-jira--not-implemented 'center-block)))
+    (clock . (lambda (&rest args) (ox-jira--not-implemented 'clock)))
+    (code . ox-jira-code)
+    (diary-sexpexample-block . (lambda (&rest args) (ox-jira--not-implemented 'diary-sexpexample-block)))
+    (drawer . (lambda (&rest args) (ox-jira--not-implemented 'drawer)))
+    (dynamic-block . (lambda (&rest args) (ox-jira--not-implemented 'dynamic-block)))
+    (entity . (lambda (&rest args) (ox-jira--not-implemented 'entity)))
+    (example-block . ox-jira-example-block)
+    (export-block . (lambda (&rest args) (ox-jira--not-implemented 'export-block)))
+    (export-snippet . (lambda (&rest args) (ox-jira--not-implemented 'export-snippet)))
+    (final-output . (lambda (&rest args) (ox-jira--not-implemented 'final-output)))
+    (fixed-width . (lambda (&rest args) (ox-jira--not-implemented 'fixed-width)))
+    (footnote-definition . (lambda (&rest args) (ox-jira--not-implemented 'footnote-definition)))
+    (footnote-reference . (lambda (&rest args) (ox-jira--not-implemented 'footnote-reference)))
+    (headline . ox-jira-headline)
+    (horizontal-rule . (lambda (&rest args) (ox-jira--not-implemented 'horizontal-rule)))
+    (inline-babel-call . (lambda (&rest args) (ox-jira--not-implemented 'inline-babel-call)))
+    (inline-src-block . (lambda (&rest args) (ox-jira--not-implemented 'inline-src-block)))
+    (inlinetask . (lambda (&rest args) (ox-jira--not-implemented 'inlinetask)))
+    (italic . ox-jira-italic)
+    (item . ox-jira-item)
     (keyword . (lambda (&rest args) ""))
-    (latex-environment . (lambda (&rest args) (org-jira--not-implemented 'latex-environment)))
-    (latex-fragment . (lambda (&rest args) (org-jira--not-implemented 'latex-fragment)))
-    (line-break . (lambda (&rest args) (org-jira--not-implemented 'line-break)))
-    (link . org-jira-link)
-    (node-property . (lambda (&rest args) (org-jira--not-implemented 'node-property)))
-    (options . (lambda (&rest args) (org-jira--not-implemented 'options)))
-    (paragraph . org-jira-paragraph)
-    (parse-tree . (lambda (&rest args) (org-jira--not-implemented 'parse-tree)))
-    (plain-list . org-jira-plain-list)
-    (plain-text . org-jira-plain-text)
-    (planning . (lambda (&rest args) (org-jira--not-implemented 'planning)))
-    (property-drawer . (lambda (&rest args) (org-jira--not-implemented 'property-drawer)))
-    (quote-block . org-jira-quote-block)
-    (radio-target . (lambda (&rest args) (org-jira--not-implemented 'radio-target)))
-    (section . org-jira-section)
-    (special-block . (lambda (&rest args) (org-jira--not-implemented 'special-block)))
-    (src-block . org-jira-src-block)
-    (statistics-cookie . org-jira-statistics-cookie)
-    (strike-through . org-jira-strike-through)
-    (subscript . org-jira-subscript)
-    (superscript . org-jira-superscript)
-    (table . org-jira-table)
-    (table-cell . org-jira-table-cell)
-    (table-row . org-jira-table-row)
-    (target . (lambda (&rest args) (org-jira--not-implemented 'target)))
-    (timestamp . (lambda (&rest args) (org-jira--not-implemented 'timestamp)))
-    (underline . org-jira-underline)
-    (verbatim . org-jira-verbatim)
-    (verse-block . (lambda (&rest args) (org-jira--not-implemented 'verse-block))))
+    (latex-environment . (lambda (&rest args) (ox-jira--not-implemented 'latex-environment)))
+    (latex-fragment . (lambda (&rest args) (ox-jira--not-implemented 'latex-fragment)))
+    (line-break . (lambda (&rest args) (ox-jira--not-implemented 'line-break)))
+    (link . ox-jira-link)
+    (node-property . (lambda (&rest args) (ox-jira--not-implemented 'node-property)))
+    (options . (lambda (&rest args) (ox-jira--not-implemented 'options)))
+    (paragraph . ox-jira-paragraph)
+    (parse-tree . (lambda (&rest args) (ox-jira--not-implemented 'parse-tree)))
+    (plain-list . ox-jira-plain-list)
+    (plain-text . ox-jira-plain-text)
+    (planning . (lambda (&rest args) (ox-jira--not-implemented 'planning)))
+    (property-drawer . (lambda (&rest args) (ox-jira--not-implemented 'property-drawer)))
+    (quote-block . ox-jira-quote-block)
+    (radio-target . (lambda (&rest args) (ox-jira--not-implemented 'radio-target)))
+    (section . ox-jira-section)
+    (special-block . (lambda (&rest args) (ox-jira--not-implemented 'special-block)))
+    (src-block . ox-jira-src-block)
+    (statistics-cookie . ox-jira-statistics-cookie)
+    (strike-through . ox-jira-strike-through)
+    (subscript . ox-jira-subscript)
+    (superscript . ox-jira-superscript)
+    (table . ox-jira-table)
+    (table-cell . ox-jira-table-cell)
+    (table-row . ox-jira-table-row)
+    (target . (lambda (&rest args) (ox-jira--not-implemented 'target)))
+    (timestamp . (lambda (&rest args) (ox-jira--not-implemented 'timestamp)))
+    (underline . ox-jira-underline)
+    (verbatim . ox-jira-verbatim)
+    (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
   :menu-entry
   '(?j "Export to JIRA"
-       ((?j "As JIRA buffer" org-jira-export-as-jira))))
+       ((?j "As JIRA buffer" ox-jira-export-as-jira))))
 
-(defun org-jira--not-implemented (element-type)
+(defun ox-jira--not-implemented (element-type)
   "Replace anything we don't handle yet wiht a big red marker."
   (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
 
 ;;; Transcode functions
 
-(defun org-jira-bold (bold contents info)
+(defun ox-jira-bold (bold contents info)
   "Transcode BOLD from Org to JIRA.
 CONTENTS is the text with bold markup. INFO is a plist holding
 contextual information."
   (format "*%s*" contents))
 
-(defun org-jira-code (code _contents info)
+(defun ox-jira-code (code _contents info)
   "Transcode a CODE object from Org to JIRA.
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value code)))
 
-(defun org-jira-example-block (example-block contents info)
+(defun ox-jira-example-block (example-block contents info)
   "Transcode an EXAMPLE-BLOCK element from Org to Jira.
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
@@ -118,7 +118,7 @@ information."
     (format "{noformat}\n%s{noformat}"
             (org-export-format-code-default example-block info))))
 
-(defun org-jira-headline (headline contents info)
+(defun ox-jira-headline (headline contents info)
   "Transcode a HEADLINE element from Org to JIRA.
 CONTENTS is the contents of the headline, as a string.  INFO is
 the plist used as a communication channel."
@@ -130,30 +130,30 @@ the plist used as a communication channel."
      (format "h%d. %s\n" level title)
      contents)))
 
-(defun org-jira-italic (italic contents info)
+(defun ox-jira-italic (italic contents info)
   "Transcode ITALIC from Org to JIRA.
 CONTENTS is the text with italic markup. INFO is a plist holding
 contextual information."
   (format "_%s_" contents))
 
-(defun org-jira--list-type-path (item)
+(defun ox-jira--list-type-path (item)
   (when (and item (eq 'item (org-element-type item)))
     (let* ((list (org-element-property :parent item))
            (list-type (org-element-property :type list)))
-      (cons list-type (org-jira--list-type-path
+      (cons list-type (ox-jira--list-type-path
                        (org-element-property :parent list))))))
 
-(defun org-jira--bullet-string (list-type-path)
+(defun ox-jira--bullet-string (list-type-path)
   (apply 'string
          (mapcar (lambda (x) (if (eq x 'ordered) ?# ?*))
                  list-type-path)))
 
-(defun org-jira-item (item contents info)
+(defun ox-jira-item (item contents info)
   "Transcode ITEM from Org to JIRA.
 CONTENTS is the text with item markup. INFO is a plist holding
 contextual information."
-  (let* ((list-type-path (org-jira--list-type-path item))
-         (bullet-string (org-jira--bullet-string (reverse list-type-path)))
+  (let* ((list-type-path (ox-jira--list-type-path item))
+         (bullet-string (ox-jira--bullet-string (reverse list-type-path)))
          (tag (let ((tag (org-element-property :tag item)))
                 (when tag
                   (org-export-data tag info))))
@@ -170,7 +170,7 @@ contextual information."
        (format "*%s*: " tag))
      contents)))
 
-(defun org-jira-link (link desc info)
+(defun ox-jira-link (link desc info)
   "Transcode a LINK object from Org to JIRA.
 
 DESC is the description part of the link, or the empty string.
@@ -193,45 +193,45 @@ INFO is a plist holding contextual information.  See
      ;; Link with only description?!
      (t desc))))
 
-(defun org-jira-underline (underline contents info)
+(defun ox-jira-underline (underline contents info)
   "Transcode UNDERLINE from Org to JIRA.
 CONTENTS is the text with underline markup. INFO is a plist holding
 contextual information."
   (format "+%s+" contents))
 
-(defun org-jira-verbatim (verbatim _contents info)
+(defun ox-jira-verbatim (verbatim _contents info)
   "Transcode a VERBATIM object from Org to Jira.
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value verbatim)))
 
-(defun org-jira-paragraph (paragraph contents info)
+(defun ox-jira-paragraph (paragraph contents info)
   "Transcode a PARAGRAPH element from Org to JIRA.
 CONTENTS is the contents of the paragraph, as a string.  INFO is
 the plist used as a communication channel."
   (replace-regexp-in-string "\n\\([^\']\\)" " \\1" contents))
 
-(defun org-jira-plain-list (plain-list contents info)
+(defun ox-jira-plain-list (plain-list contents info)
   "Transcode PLAIN-LIST from Org to JIRA.
 CONTENTS is the text with plain-list markup. INFO is a plist holding
 contextual information."
   contents)
 
-(defun org-jira-plain-text (text info)
+(defun ox-jira-plain-text (text info)
   "Transcode TEXT from Org to JIRA.
 TEXT is the string to transcode. INFO is a plist holding
 contextual information."
   (replace-regexp-in-string "\\([[{]\\)"
-                            '(lambda (p) (format "\\%s" p))
+                            '(lambda (p) (format "\\\\%s" p))
                             text))
 
-(defun org-jira-section (section contents info)
+(defun ox-jira-section (section contents info)
   "Transcode a SECTION element from Org to JIRA.
 CONTENTS is the contents of the section, as a string.  INFO is
 the plist used as a communication channel."
   contents)
 
-(defun org-jira-src-block (src-block contents info)
+(defun ox-jira-src-block (src-block contents info)
   "Transcode a SRC-BLOCK element from Org to Jira.
 CONTENTS holds the contents of the src-block.  INFO is a plist holding
 contextual information."
@@ -244,32 +244,32 @@ contextual information."
               lang
               code))))
 
-(defun org-jira-subscript (subscript contents info)
+(defun ox-jira-subscript (subscript contents info)
   "Transcode SUBSCRIPT from Org to JIRA.
 CONTENTS is the text with subscript markup. INFO is a plist holding
 contextual information."
   (format "~%s~" contents))
 
-(defun org-jira-superscript (superscript contents info)
+(defun ox-jira-superscript (superscript contents info)
   "Transcode SUPERSCRIPT from Org to JIRA.
 CONTENTS is the text with superscript markup. INFO is a plist holding
 contextual information."
   (format "^%s^" contents))
 
-(defun org-jira-table (table contents info)
+(defun ox-jira-table (table contents info)
   "Transcode a TABLE element from Org to JIRA.
 CONTENTS holds the contents of the table.  INFO is a plist holding
 contextual information."
   contents)
 
-(defun org-jira-table-row (table-row contents info)
+(defun ox-jira-table-row (table-row contents info)
   "Transcode a TABLE-ROW element from Org to JIRA.
 CONTENTS holds the contents of the table-row.  INFO is a plist holding
 contextual information."
   (when (eq 'standard (org-element-property :type table-row))
     (format "%s\n" contents)))
 
-(defun org-jira-table-cell (table-cell contents info)
+(defun ox-jira-table-cell (table-cell contents info)
   "Transcode a TABLE-CELL element from Org to JIRA.
 CONTENTS holds the contents of the table-cell.  INFO is a plist holding
 contextual information."
@@ -282,24 +282,24 @@ contextual information."
     (format "%s %s %s" sep contents
             (if (org-export-last-sibling-p table-cell info) sep ""))))
 
-(defun org-jira-statistics-cookie (statistics-cookie _contents _info)
+(defun ox-jira-statistics-cookie (statistics-cookie _contents _info)
   "Transcode a STATISTICS-COOKIE object from Org to JIRA.
 CONTENTS is nil.  INFO is a plist holding contextual information."
   (format "\\%s" (org-element-property :value statistics-cookie)))
 
-(defun org-jira-strike-through (strike-through contents info)
+(defun ox-jira-strike-through (strike-through contents info)
   "Transcode STRIKE-THROUGH from Org to JIRA.
 CONTENTS is the text with strike-through markup. INFO is a plist holding
 contextual information."
   (format "-%s-" contents))
 
-(defun org-jira-quote-block (quote-block contents info)
+(defun ox-jira-quote-block (quote-block contents info)
   "Transcode a QUOTE-BLOCK element from Org to Jira.
 CONTENTS holds the contents of the block.  INFO is a plist
 holding contextual information."
   (format "{quote}\n%s{quote}" contents))
 
-(defun org-jira-export-as-jira
+(defun ox-jira-export-as-jira
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer as a Jira buffer.
 
