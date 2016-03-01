@@ -1,5 +1,8 @@
 #+TITLE: JIRA Backend for Org Export Engine
 #+AUTHOR: Stig Brautaset
+
+  [[http://melpa.org/#/ox-jira][file:http://melpa.org/packages/ox-jira-badge.svg]]
+
 * Introduction
 
   This module plugs into the regular Org Export Engine and transforms Org
