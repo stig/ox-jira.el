@@ -7,26 +7,15 @@
 
 * Conventional headers
 
-** Short description
-
    #+BEGIN_SRC emacs-lisp :padline no
      ;;; ox-jira-test.el --- tests for ox-jira.el
 
-   #+END_SRC
+     ;; Copyright (C) 2016 Stig Brautaset
 
-** Author
+     ;; Author: Stig Brautaset <stig@brautaset.org>
 
-   #+BEGIN_SRC emacs-lisp
-     ;;; Author: Stig Brautaset <stig@brautaset.org>
-   #+END_SRC
-
-** Distribution
-
-   #+BEGIN_SRC emacs-lisp
      ;; This file is NOT part of GNU Emacs.
    #+END_SRC
-
-** Copyright & License
 
    I prefer the MIT license because it is short enough to read without toilet
    or tea breaks, and I _think_ I can actually wrap my head around it. (And I
@@ -35,8 +24,6 @@
    with the GPL for this work.
 
    #+BEGIN_SRC emacs-lisp
-     ;;; Copyright (C) 2016 Stig Brautaset
-
      ;; This program is free software: you can redistribute it and/or modify
      ;; it under the terms of the GNU General Public License as published by
      ;; the Free Software Foundation, either version 3 of the License, or
@@ -51,9 +38,7 @@
      ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
    #+END_SRC
 
-** Code
-
-   Lastly a special header to denote that we're done with the header section
+   Lastly a special marker to denote that we're done with the header section
    and starting the actual code now.
 
    #+BEGIN_SRC emacs-lisp

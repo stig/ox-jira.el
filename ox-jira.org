@@ -17,16 +17,34 @@
 * Header
 
   First come some [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventional headers]] that libraries tend to include. Cask
-  _requires_ them, so I assume they are a good idea.
-
-** Short description
+  requires them. Use =:padline no= to avoid starting the tangled file with a
+  blank line.
 
    #+BEGIN_SRC emacs-lisp :padline no
      ;;; ox-jira.el --- JIRA Backend for Org Export Engine
 
+     ;; Copyright (C) 2016 Stig Brautaset
+
+     ;; Author: Stig Brautaset <stig@brautaset.org>
+     ;; Version: 0.1-SNAPSHOT
    #+END_SRC
 
-** Copyright & License
+   Define the keywords that can be used to find this package with
+   =finder-by-keyword= (=C-h p=).
+
+   #+BEGIN_SRC emacs-lisp :padline no
+     ;; Keywords: outlines, hypermedia, wp
+     ;; Homepage: https://github.com/stig/ox-jira.el
+   #+END_SRC
+
+   We requires Org version 8 or above, as the export backend system we use
+   was introduced then.
+
+   #+BEGIN_SRC emacs-lisp :padline no
+     ;; Package-Requires: ((org "8.0"))
+
+     ;; This file is NOT part of GNU Emacs.
+   #+END_SRC
 
    I prefer the MIT license because it is short enough to read without toilet
    or tea breaks, and I _think_ I can actually wrap my head around it. (And I
@@ -35,8 +53,6 @@
    with the GPL for this work.
 
    #+BEGIN_SRC emacs-lisp
-     ;;; Copyright (C) 2016 Stig Brautaset
-
      ;; This program is free software: you can redistribute it and/or modify
      ;; it under the terms of the GNU General Public License as published by
      ;; the Free Software Foundation, either version 3 of the License, or
@@ -51,49 +67,7 @@
      ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
    #+END_SRC
 
-** Author
-
-   #+BEGIN_SRC emacs-lisp
-     ;;; Author: Stig Brautaset <stig@brautaset.org>
-   #+END_SRC
-
-** Keywords
-
-   Define the keywords that can be used to find this package with
-   =finder-by-keyword= (=C-h p=).
-
-   #+BEGIN_SRC emacs-lisp
-     ;; Keywords: outlines, hypermedia, wp
-   #+END_SRC
-** Distribution
-
-   #+BEGIN_SRC emacs-lisp
-     ;; This file is NOT part of GNU Emacs.
-   #+END_SRC
-** Version
-
-   #+BEGIN_SRC emacs-lisp
-     ;;; Version: 0.1-SNAPSHOT
-   #+END_SRC
-
-** Homepage
-
-   #+BEGIN_SRC emacs-lisp
-     ;; Homepage: https://github.com/stig/ox-jira.el
-   #+END_SRC
-
-** Package Requires
-
-   We requires Org version 8 or above, as the export backend system we use
-   was introduced then.
-
-   #+BEGIN_SRC emacs-lisp
-     ;; Package-Requires: ((org "8.0"))
-   #+END_SRC
-
-** Code
-
-   Lastly a special header to denote that we're done with the header section
+   Lastly a special marker to denote that we're done with the header section
    and starting the actual code now.
 
    #+BEGIN_SRC emacs-lisp

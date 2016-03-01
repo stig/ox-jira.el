@@ -1,6 +1,14 @@
 ;;; ox-jira.el --- JIRA Backend for Org Export Engine
 
-;;; Copyright (C) 2016 Stig Brautaset
+;; Copyright (C) 2016 Stig Brautaset
+
+;; Author: Stig Brautaset <stig@brautaset.org>
+;; Version: 0.1-SNAPSHOT
+;; Keywords: outlines, hypermedia, wp
+;; Homepage: https://github.com/stig/ox-jira.el
+;; Package-Requires: ((org "8.0"))
+
+;; This file is NOT part of GNU Emacs.
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -14,18 +22,6 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Author: Stig Brautaset <stig@brautaset.org>
-
-;; Keywords: outlines, hypermedia, wp
-
-;; This file is NOT part of GNU Emacs.
-
-;;; Version: 0.1-SNAPSHOT
-
-;; Homepage: https://github.com/stig/ox-jira.el
-
-;; Package-Requires: ((org "8.0"))
 
 ;;; Code:
 

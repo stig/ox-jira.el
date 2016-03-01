@@ -1,10 +1,10 @@
 ;;; ox-jira-test.el --- tests for ox-jira.el
 
-;;; Author: Stig Brautaset <stig@brautaset.org>
+;; Copyright (C) 2016 Stig Brautaset
+
+;; Author: Stig Brautaset <stig@brautaset.org>
 
 ;; This file is NOT part of GNU Emacs.
-
-;;; Copyright (C) 2016 Stig Brautaset
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
