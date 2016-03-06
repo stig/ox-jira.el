@@ -45,8 +45,8 @@
     (export-snippet . (lambda (&rest args) (ox-jira--not-implemented 'export-snippet)))
     (final-output . (lambda (&rest args) (ox-jira--not-implemented 'final-output)))
     (fixed-width . (lambda (&rest args) (ox-jira--not-implemented 'fixed-width)))
-    (footnote-definition . (lambda (&rest args) (ox-jira--not-implemented 'footnote-definition)))
-    (footnote-reference . (lambda (&rest args) (ox-jira--not-implemented 'footnote-reference)))
+    (footnote-definition . ox-jira-footnote-definition)
+    (footnote-reference . ox-jira-footnote-reference)
     (headline . ox-jira-headline)
     (horizontal-rule . (lambda (&rest args) (ox-jira--not-implemented 'horizontal-rule)))
     (inline-babel-call . (lambda (&rest args) (ox-jira--not-implemented 'inline-babel-call)))
@@ -113,6 +113,31 @@ information."
   (when (org-string-nw-p (org-element-property :value example-block))
     (format "{noformat}\n%s{noformat}"
             (org-export-format-code-default example-block info))))
+
+(defun ox-jira--footnote-anchor (element)
+  (let ((label (org-element-property :label element)))
+    (replace-regexp-in-string ":" "" label)))
+
+(defun ox-jira--footnote-ref (anchor)
+  (replace-regexp-in-string "fn" "" anchor))
+
+(defun ox-jira-footnote-reference (footnote-reference contents info)
+  "Transcode an FOOTNOTE-REFERENCE element from Org to Jira.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (let* ((anchor (ox-jira--footnote-anchor footnote-reference))
+        (ref (ox-jira--footnote-ref anchor)))
+    (format "{anchor:back%s}[^%s^|#%s]"
+            anchor ref anchor)))
+
+(defun ox-jira-footnote-definition (footnote-definition contents info)
+  "Transcode an FOOTNOTE-DEFINITION element from Org to Jira.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (let* ((anchor (ox-jira--footnote-anchor footnote-definition))
+         (ref (ox-jira--footnote-ref anchor)))
+    (format "{anchor:%s}[^%s^|#back%s] %s"
+            anchor ref anchor contents)))
 
 (defun ox-jira-headline (headline contents info)
   "Transcode a HEADLINE element from Org to JIRA.

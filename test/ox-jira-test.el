@@ -203,6 +203,21 @@ formatted
 #+end_example
 " 'jira))))
 
+(ert-deftest ox-jira-test/footnotes ()
+  (should (equal "fi fo{anchor:backfn1}[^1^|#fn1]. Another one{anchor:backfn2}[^2^|#fn2].
+
+h1. Footnotes
+{anchor:fn1}[^1^|#backfn1] fa fum.
+{anchor:fn2}[^2^|#backfn2] fut fut.
+" (org-export-string-as "fi fo[fn:1]. Another one[fn:2].
+
+* Footnotes
+
+[fn:1] fa fum.
+
+[fn:2] fut fut.
+" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here
