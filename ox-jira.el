@@ -92,6 +92,9 @@
   "Replace anything we don't handle yet wiht a big red marker."
   (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
 
+(defun ox-jira--text-transform-embeddable (transform-char contents)
+  (concat "{anchor}" transform-char contents transform-char))
+
 ;;; Transcode functions
 
 (defun ox-jira-bold (bold contents info)
@@ -277,13 +280,13 @@ contextual information."
   "Transcode SUBSCRIPT from Org to JIRA.
 CONTENTS is the text with subscript markup. INFO is a plist holding
 contextual information."
-  (format "~%s~" contents))
+  (ox-jira--text-transform-embeddable "~" contents))
 
 (defun ox-jira-superscript (superscript contents info)
   "Transcode SUPERSCRIPT from Org to JIRA.
 CONTENTS is the text with superscript markup. INFO is a plist holding
 contextual information."
-  (format "^%s^" contents))
+  (ox-jira--text-transform-embeddable "^" contents))
 
 (defun ox-jira-table (table contents info)
   "Transcode a TABLE element from Org to JIRA.

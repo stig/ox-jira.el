@@ -171,6 +171,18 @@
        (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
    #+END_SRC
 
+   Super^script and sub_script I often want at the end of words, with no
+   whitespace immediately before it. Unfortunately JIRA doesn't support that,
+   so we have to fake it. This function makes simple text transforms
+   "embeddable" by preceding them with an empty anchor. This is admittedly a
+   bit of a hack, but I haven't found anything better.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun ox-jira--text-transform-embeddable (transform-char contents)
+       (concat "{anchor}" transform-char contents transform-char))
+   #+END_SRC
+
+
 ** Transcode Functions
 
    These functions do the actual translation to JIRA format. For this section
@@ -495,7 +507,7 @@
         "Transcode SUBSCRIPT from Org to JIRA.
       CONTENTS is the text with subscript markup. INFO is a plist holding
       contextual information."
-        (format "~%s~" contents))
+        (ox-jira--text-transform-embeddable "~" contents))
     #+END_SRC
 
 *** Superscript
@@ -505,7 +517,7 @@
         "Transcode SUPERSCRIPT from Org to JIRA.
       CONTENTS is the text with superscript markup. INFO is a plist holding
       contextual information."
-        (format "^%s^" contents))
+        (ox-jira--text-transform-embeddable "^" contents))
     #+END_SRC
 
 *** Table

@@ -32,11 +32,13 @@
   (should (equal "this is *strong* text\n" (org-export-string-as "this is *strong* text" 'jira)))
   (should (equal "this is _emphasised_ text\n" (org-export-string-as "this is /emphasised/ text" 'jira)))
   (should (equal "this is +underlined+ text\n" (org-export-string-as "this is _underlined_ text" 'jira)))
-  (should (equal "this is super^scripted^ text\n" (org-export-string-as "this is super^scripted text" 'jira)))
-  (should (equal "this is sub~scripted~ text\n" (org-export-string-as "this is sub_scripted text" 'jira)))
   (should (equal "this is -deleted- text\n" (org-export-string-as "this is +deleted+ text" 'jira)))
   (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
   (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
+
+(ert-deftest ox-jira-test/embeddable-text-effects ()
+  (should (equal "this is super{anchor}^scripted^ text\n" (org-export-string-as "this is super^scripted text" 'jira)))
+  (should (equal "this is sub{anchor}~scripted~ text\n" (org-export-string-as "this is sub_scripted text" 'jira))))
 
 (ert-deftest ox-jira-test/quotations ()
   (should (equal "{quote}
