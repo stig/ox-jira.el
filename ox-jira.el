@@ -23,6 +23,41 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
+;; This module plugs into the regular Org Export Engine and transforms Org
+;; files to JIRA markup for pasting into JIRA tickets & comments.
+
+;;* Usage
+
+;;  In an Org buffer, hit =C-c C-e j j= to bring up \*Org Export Dispatcher\*
+;;  and export it as a JIRA buffer. I usually use =C-x h= to mark the whole
+;;  buffer, then =M-w= to save it to the kill ring (and global pasteboard) for
+;;  pasting into JIRA issues.
+
+;;* Installation
+
+;;  This library is on Melpa. You can install it like this:
+
+;;  #+BEGIN_EXAMPLE
+;;  M-x package-install RET ox-jira RET
+;;  #+END_EXAMPLE
+
+;;* Manual installation
+
+;;  If you don't want to install from Melpa, simply clone this repo and do one
+;;  of:
+
+;;  #+BEGIN_EXAMPLE
+;;  M-x org-babel-load-file RET ox-jira.org RET
+;;  #+END_EXAMPLE
+
+;;  Or:
+
+;;  #+BEGIN_EXAMPLE
+;;  M-x load-file RET ox-jira.el RET
+;;  #+END_EXAMPLE
+
 ;;; Code:
 
 (eval-when-compile (require 'cl))
