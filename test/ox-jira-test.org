@@ -219,8 +219,6 @@
      - [X] fo" 'jira))))
    #+END_SRC
 
-
-
 ** Source code
 
    I use Org mode for literate programming, and executable lab notes, so we
@@ -270,6 +268,22 @@
         " 'jira))))
    #+END_SRC
 
+** Fixed-width
+
+   Fixed-width text is used for short log snippets etc.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/fixed-width-blocks ()
+       (should (equal "{noformat}
+     stuff that should
+      not be
+     formatted
+     {noformat}
+     " (org-export-string-as ": stuff that should
+     :  not be
+     : formatted
+     " 'jira))))
+   #+END_SRC
 ** Provide
 
    Announce that =ox-jira-test= is a feature of the current Emacs.

@@ -49,7 +49,7 @@
     (export-block . (lambda (&rest args) (org-jira--not-implemented 'export-block)))
     (export-snippet . (lambda (&rest args) (org-jira--not-implemented 'export-snippet)))
     (final-output . (lambda (&rest args) (org-jira--not-implemented 'final-output)))
-    (fixed-width . (lambda (&rest args) (org-jira--not-implemented 'fixed-width)))
+    (fixed-width . org-jira-fixed-width)
     (footnote-definition . (lambda (&rest args) (org-jira--not-implemented 'footnote-definition)))
     (footnote-reference . (lambda (&rest args) (org-jira--not-implemented 'footnote-reference)))
     (headline . org-jira-headline)
@@ -118,6 +118,14 @@ information."
   (when (org-string-nw-p (org-element-property :value example-block))
     (format "{noformat}\n%s{noformat}"
             (org-export-format-code-default example-block info))))
+
+(defun org-jira-fixed-width (fixed-width contents info)
+  "Transcode an FIXED-WIDTH element from Org to Jira.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (format "{noformat}\n%s{noformat}"
+          (org-remove-indentation
+           (org-element-property :value fixed-width))))
 
 (defun org-jira-headline (headline contents info)
   "Transcode a HEADLINE element from Org to JIRA.

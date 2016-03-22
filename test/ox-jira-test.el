@@ -152,6 +152,17 @@ formatted
 #+end_example
 " 'jira))))
 
+(ert-deftest ox-jira-test/fixed-width-blocks ()
+  (should (equal "{noformat}
+stuff that should
+ not be
+formatted
+{noformat}
+" (org-export-string-as ": stuff that should
+:  not be
+: formatted
+" 'jira))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here
