@@ -327,6 +327,23 @@
         " 'jira))))
    #+END_SRC
 
+** Fixed-width
+
+   Fixed-width text is used for short log snippets etc.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/fixed-width-blocks ()
+       (should (equal "{noformat}
+     stuff that should
+      not be
+     formatted
+     {noformat}
+     " (org-export-string-as ": stuff that should
+     :  not be
+     : formatted
+     " 'jira))))
+   #+END_SRC
+
 ** Footnotes
 
    #+BEGIN_SRC emacs-lisp

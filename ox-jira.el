@@ -44,7 +44,7 @@
     (export-block . (lambda (&rest args) (ox-jira--not-implemented 'export-block)))
     (export-snippet . (lambda (&rest args) (ox-jira--not-implemented 'export-snippet)))
     (final-output . (lambda (&rest args) (ox-jira--not-implemented 'final-output)))
-    (fixed-width . (lambda (&rest args) (ox-jira--not-implemented 'fixed-width)))
+    (fixed-width . ox-jira-fixed-width)
     (footnote-definition . ox-jira-footnote-definition)
     (footnote-reference . ox-jira-footnote-reference)
     (headline . ox-jira-headline)
@@ -113,6 +113,14 @@ information."
   (when (org-string-nw-p (org-element-property :value example-block))
     (format "{noformat}\n%s{noformat}"
             (org-export-format-code-default example-block info))))
+
+(defun ox-jira-fixed-width (fixed-width contents info)
+  "Transcode an FIXED-WIDTH element from Org to Jira.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (format "{noformat}\n%s{noformat}"
+          (org-remove-indentation
+           (org-element-property :value fixed-width))))
 
 (defun ox-jira--footnote-anchor (element)
   (let ((label (org-element-property :label element)))

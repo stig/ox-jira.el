@@ -203,6 +203,17 @@ formatted
 #+end_example
 " 'jira))))
 
+(ert-deftest ox-jira-test/fixed-width-blocks ()
+  (should (equal "{noformat}
+stuff that should
+ not be
+formatted
+{noformat}
+" (org-export-string-as ": stuff that should
+:  not be
+: formatted
+" 'jira))))
+
 (ert-deftest ox-jira-test/footnotes ()
   (should (equal "fi fo{anchor:backfn1}[^1^|#fn1]. Another one{anchor:backfn2}[^2^|#fn2].
 
