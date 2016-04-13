@@ -305,12 +305,14 @@ CONTENTS holds the contents of the src-block.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
     (let* ((lang (org-element-property :language src-block))
-           (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml"))
-                     lang "none"))
+           (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang))
            (code (org-export-format-code-default src-block info)))
-      (format "{code:%s}\n%s{code}"
-              lang
-              code))))
+      (concat
+       (if lang
+           (format "{code:%s}" lang)
+         "{code}")
+       code
+       "{code}"))))
 
 (defun ox-jira-subscript (subscript contents info)
   "Transcode SUBSCRIPT from Org to JIRA.
