@@ -352,6 +352,18 @@
      " 'jira))))
    #+END_SRC
 
+** Horizontal Rule
+
+   Horizontal rule is expressed at least five hyphens with newline in Org
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/horizontal-rule ()
+       (should
+        (equal "----\n" (org-export-string-as "-----\n" 'jira)))
+       (should
+        (equal "----\n" (org-export-string-as "-------\n" 'jira))))
+   #+END_SRC
+
 ** Footnotes
 
    #+BEGIN_SRC emacs-lisp

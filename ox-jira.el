@@ -58,7 +58,7 @@
     (footnote-definition . ox-jira-footnote-definition)
     (footnote-reference . ox-jira-footnote-reference)
     (headline . ox-jira-headline)
-    (horizontal-rule . (lambda (&rest args) (ox-jira--not-implemented 'horizontal-rule)))
+    (horizontal-rule . ox-jira-horizontal-rule)
     (inline-babel-call . (lambda (&rest args) (ox-jira--not-implemented 'inline-babel-call)))
     (inline-src-block . (lambda (&rest args) (ox-jira--not-implemented 'inline-src-block)))
     (inlinetask . (lambda (&rest args) (ox-jira--not-implemented 'inlinetask)))
@@ -171,6 +171,10 @@ the plist used as a communication channel."
     (concat
      (format "h%d. %s\n" level title)
      contents)))
+
+(defun ox-jira-horizontal-rule (horizontal-rule contents info)
+  "Transcode a HORIZONTAL-RULE element from Org to JIRA."
+  "----\n")
 
 (defun ox-jira-italic (italic contents info)
   "Transcode ITALIC from Org to JIRA.
