@@ -103,6 +103,7 @@
     (eval-when-compile (require 'cl))
     (require 'ox)
     (require 'ox-publish)
+    (require 'subr-x) ;; contains string-trim
   #+END_SRC
 
 ** Define Backend
@@ -196,7 +197,6 @@
      (defun ox-jira--text-transform-embeddable (transform-char contents)
        (concat "{anchor}" transform-char contents transform-char))
    #+END_SRC
-
 
 ** Transcode Functions
 
@@ -357,6 +357,16 @@
                (mapcar (lambda (x) (if (eq x 'ordered) ?# ?*))
                        list-type-path)))
 
+
+      (defun ox-jira--paragraphize (s)
+        "JIRA doesn't really have good support for paragraphs within lists,
+                   so we fake it with an invisible panel."
+        (when (stringp s)
+          (let ((ss (string-trim s)))
+            (if (< 1 (length (split-string ss "[\n\f\v\r]")))
+                (concat "{panel:borderStyle=none}" ss "{panel}")
+              ss))))
+
       (defun ox-jira-item (item contents info)
         "Transcode ITEM from Org to JIRA.
       CONTENTS is the text with item markup. INFO is a plist holding
@@ -377,7 +387,7 @@
              (concat checkbox " "))
            (when tag
              (format "*%s*: " tag))
-           contents)))
+           (ox-jira--paragraphize contents))))
     #+END_SRC
 
 *** Link

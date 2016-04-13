@@ -38,6 +38,7 @@
 (eval-when-compile (require 'cl))
 (require 'ox)
 (require 'ox-publish)
+(require 'subr-x) ;; contains string-trim
 
 (org-export-define-backend 'jira
   '((babel-call . (lambda (&rest args) (ox-jira--not-implemented 'babel-call)))
@@ -190,6 +191,16 @@ contextual information."
          (mapcar (lambda (x) (if (eq x 'ordered) ?# ?*))
                  list-type-path)))
 
+
+(defun ox-jira--paragraphize (s)
+  "JIRA doesn't really have good support for paragraphs within lists,
+             so we fake it with an invisible panel."
+  (when (stringp s)
+    (let ((ss (string-trim s)))
+      (if (< 1 (length (split-string ss "[\n\f\v\r]")))
+          (concat "{panel:borderStyle=none}" ss "{panel}")
+        ss))))
+
 (defun ox-jira-item (item contents info)
   "Transcode ITEM from Org to JIRA.
 CONTENTS is the text with item markup. INFO is a plist holding
@@ -210,7 +221,7 @@ contextual information."
        (concat checkbox " "))
      (when tag
        (format "*%s*: " tag))
-     contents)))
+     (ox-jira--paragraphize contents))))
 
 (defun ox-jira-link (link desc info)
   "Transcode a LINK object from Org to JIRA.

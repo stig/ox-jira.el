@@ -248,6 +248,22 @@
      - fa :: fum" 'jira))))
    #+END_SRC
 
+** Multi-paragraph list items
+
+   This is not really supported by JIRA, so we have to fake it.
+
+   #+BEGIN_SRC emacs-lisp
+     (ert-deftest ox-jira-test/multi-para-list-items()
+       (should (equal "# {panel:borderStyle=none}fi
+
+fo{panel}
+# fa
+" (org-export-string-as "1. fi
+
+   fo
+2. fa" 'jira))))
+   #+END_SRC
+
 ** Plain text
 
    Check that certain characters are escaped.
