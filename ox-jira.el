@@ -94,6 +94,7 @@
     (underline . ox-jira-underline)
     (verbatim . ox-jira-verbatim)
     (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
+  :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
   :menu-entry
   '(?j "Export to JIRA"
        ((?j "As JIRA buffer" ox-jira-export-as-jira))))
@@ -104,6 +105,26 @@
 
 (defun ox-jira--text-transform-embeddable (transform-char contents)
   (concat "{anchor}" transform-char contents transform-char))
+
+;;; Filters
+
+(defun ox-jira-fix-multi-paragraph-items (tree backend info)
+  "Remove extra blank line between paragraphs in plain-list items.
+
+TREE is the parse tree being exported.  BACKEND is the export
+back-end used.  INFO is a plist used as a communication channel.
+
+Assume BACKEND is `jira'."
+  (org-element-map tree '(paragraph)
+    (lambda (e)
+      (org-element-put-property
+       e :post-blank
+       (if (and (eq (org-element-type e) 'paragraph)
+                (eq (org-element-type (org-element-property :parent e)) 'item))
+           0
+         1))))
+  ;; Return updated tree.
+  tree)
 
 ;;; Transcode functions
 
