@@ -99,6 +99,8 @@
   '(?j "Export to JIRA"
        ((?j "As JIRA buffer" ox-jira-export-as-jira))))
 
+;;; Internal Helpers
+
 (defun ox-jira--not-implemented (element-type)
   "Replace anything we don't handle yet wiht a big red marker."
   (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
@@ -115,14 +117,13 @@ TREE is the parse tree being exported.  BACKEND is the export
 back-end used.  INFO is a plist used as a communication channel.
 
 Assume BACKEND is `jira'."
-  (org-element-map tree '(paragraph)
+  (org-element-map tree '(item paragraph)
     (lambda (e)
       (org-element-put-property
        e :post-blank
-       (if (and (eq (org-element-type e) 'paragraph)
-                (eq (org-element-type (org-element-property :parent e)) 'item))
-           0
-         1))))
+       (cond ((eq (org-element-type e) 'item) 0)
+             ((eq (org-element-type e) 'paragraph)
+              (if (eq (org-element-type (org-element-property :parent e)) 'item) 0 1))))))
   ;; Return updated tree.
   tree)
 
@@ -235,7 +236,7 @@ contextual information."
        (concat checkbox " "))
      (when tag
        (format "*%s*: " tag))
-     contents)))
+       contents)))
 
 (defun ox-jira-link (link desc info)
   "Transcode a LINK object from Org to JIRA.

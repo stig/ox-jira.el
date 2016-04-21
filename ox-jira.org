@@ -177,6 +177,10 @@
 
 ** Internal helpers
 
+   #+BEGIN_SRC emacs-lisp
+     ;;; Internal Helpers
+   #+END_SRC
+
    Because I'm adding support for things as I find I need it rather than all
    in one go, let's put a big fat red marker in for things we have not
    implemented yet, to avoid missing it.
@@ -202,7 +206,15 @@
 
    #+BEGIN_SRC emacs-lisp
      ;;; Filters
+   #+END_SRC
 
+   Org support a single blank line between items in a list, but if we export
+   like that to JIRA format it will be interpreted as multiple consecutive
+   lists, which is never what I want. We can attempt to fix this by removing
+   the "post-blank" after a items (and paragraphs inside items) using a
+   filter.
+
+   #+BEGIN_SRC emacs-lisp
      (defun ox-jira-fix-multi-paragraph-items (tree backend info)
        "Remove extra blank line between paragraphs in plain-list items.
 
@@ -210,14 +222,13 @@
      back-end used.  INFO is a plist used as a communication channel.
 
      Assume BACKEND is `jira'."
-       (org-element-map tree 'paragraph
+       (org-element-map tree '(item paragraph)
          (lambda (e)
            (org-element-put-property
             e :post-blank
-            (if (and (eq (org-element-type e) 'paragraph)
-                     (eq (org-element-type (org-element-property :parent e)) 'item))
-                0
-              1))))
+            (cond ((eq (org-element-type e) 'item) 0)
+                  ((eq (org-element-type e) 'paragraph)
+                   (if (eq (org-element-type (org-element-property :parent e)) 'item) 0 1))))))
        ;; Return updated tree.
        tree)
    #+END_SRC

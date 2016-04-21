@@ -255,12 +255,27 @@
    #+BEGIN_SRC emacs-lisp
      (ert-deftest ox-jira-test/multi-para-list-items()
        (should (equal "# fi
-fo
-# fa
-" (org-export-string-as "1. fi
+     fo
+     # fa
+     " (org-export-string-as "1. fi
 
-   fo
-2. fa" 'jira))))
+        fo
+     2. fa" 'jira)))
+       (should (equal "# fi
+     #* fifi
+     #* fofo
+     # fa
+     # fum
+     " (org-export-string-as "1. fi
+
+       ,* fifi
+
+       ,* fofo
+
+     2. fa
+
+     3. fum" 'jira)))
+       )
    #+END_SRC
 
 ** Plain text
