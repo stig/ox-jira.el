@@ -261,6 +261,7 @@
 
         fo
      2. fa" 'jira)))
+
        (should (equal "# fi
      #* fifi
      #* fofo
@@ -275,6 +276,29 @@
      2. fa
 
      3. fum" 'jira)))
+
+       (should (equal "# fi
+     #* {code:sql}SELECT 1;
+     {code}
+     {code:sql}SELECT 2;
+     {code}
+     #* fofo
+     # fa
+     " (org-export-string-as "1. fi
+
+       ,*
+         ,#+begin_src sql
+         SELECT 1;
+         ,#+end_src
+
+         ,#+begin_src sql
+         SELECT 2;
+         ,#+end_src
+
+       ,* fofo
+
+     2. fa
+     " 'jira)))
        )
    #+END_SRC
 
