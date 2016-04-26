@@ -295,8 +295,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (ert-deftest ox-jira-test/src-blocks ()
-       (should (equal "{code:none}
-     echo hello
+       (should (equal "{code}echo hello
      # echo world
      {code}
      " (org-export-string-as "#+begin_src sh
@@ -304,8 +303,7 @@
           # echo world
           ,#+end_src
      " 'jira)))
-       (should (equal "{code:sql}
-     BEGIN;
+       (should (equal "{code:sql}BEGIN;
      SELECT NOW();
      END;
      {code}
