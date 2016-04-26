@@ -222,13 +222,13 @@
      back-end used.  INFO is a plist used as a communication channel.
 
      Assume BACKEND is `jira'."
-       (org-element-map tree '(item paragraph)
+       (org-element-map tree '(item paragraph src-block)
          (lambda (e)
            (org-element-put-property
             e :post-blank
-            (cond ((eq (org-element-type e) 'item) 0)
-                  ((eq (org-element-type e) 'paragraph)
-                   (if (eq (org-element-type (org-element-property :parent e)) 'item) 0 1))))))
+            (if (or (eq (org-element-type e) 'item)
+                    (eq (org-element-type (org-element-property :parent e)) 'item))
+                0 1))))
        ;; Return updated tree.
        tree)
    #+END_SRC
