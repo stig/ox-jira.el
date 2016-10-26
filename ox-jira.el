@@ -6,7 +6,7 @@
 ;; Version: 0.1-SNAPSHOT
 ;; Keywords: outlines, hypermedia, wp
 ;; Homepage: https://github.com/stig/ox-jira.el
-;; Package-Requires: ((org "8.0"))
+;; Package-Requires: ((org "8.3"))
 
 ;; This file is NOT part of GNU Emacs.
 
