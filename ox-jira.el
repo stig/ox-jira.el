@@ -91,11 +91,12 @@
     (table-cell . ox-jira-table-cell)
     (table-row . ox-jira-table-row)
     (target . (lambda (&rest args) (ox-jira--not-implemented 'target)))
-    (timestamp . (lambda (&rest args) (ox-jira--not-implemented 'timestamp)))
+    (timestamp . ox-jira-timestamp)
     (underline . ox-jira-underline)
     (verbatim . ox-jira-verbatim)
     (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
-  :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
+  :filters-alist '((:filter-timestamp . ox-jira-remove-timestamp-brackets)
+                   (:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
   :menu-entry
   '(?j "Export to JIRA"
        ((?j "As JIRA buffer" ox-jira-export-as-jira))))
@@ -478,6 +479,20 @@ contextual information."
 CONTENTS holds the contents of the block.  INFO is a plist
 holding contextual information."
   (format "{quote}\n%s{quote}" contents))
+
+
+(defun ox-jira-timestamp (timestamp _contents info)
+  "Transcode a TIMESTAMP object from Org to JIRA.
+CONTENTS is nil. INFO is a plist holding contextual information."
+  (let ((org-time-stamp-custom-formats '("<%Y-%m-%d>" . "<%Y-%m-%d %H:%M>"))
+        (org-display-custom-times t))
+    (org-timestamp-translate timestamp)))
+
+(defun ox-jira-remove-timestamp-brackets (timestamp backend info)
+  "Add a filter to remove annoying brackets around timestamps, as
+these are hardcoded in org-timestamp-translate, c.f.
+http://stackoverflow.com/a/33716338/5950"
+  (replace-regexp-in-string "[<>]\\|[][]" "" timestamp))
 
 (defun ox-jira-export-as-jira
     (&optional async subtreep visible-only body-only ext-plist)

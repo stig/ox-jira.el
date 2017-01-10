@@ -313,6 +313,13 @@ h1. Footnotes
 [fn:2] fut fut.
 "))))
 
+
+(ert-deftest ox-jira-test/timestamps ()
+  (should (equal "An inactive timestamp: 2017-01-11\n"
+                 (to-jira "An inactive timestamp: [2017-01-11 Wed]")))
+  (should (equal "An active timestamp: 2017-01-11\n"
+                 (to-jira "An active timestamp: <2017-01-11 Wed>"))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here
