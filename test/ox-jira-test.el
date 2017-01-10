@@ -25,32 +25,35 @@
 (require 'ox)
 (require 'ox-jira)
 
+(defun to-jira (string)
+  (org-export-string-as string 'jira))
+
 ;; This is my first foray into testing in Emacs. Please be kind.
 
 ;; Let's write the simplest possible test that actually invokes anything org
 ;; export related.
 ;;
 (ert-deftest ox-jira-test/hello-world ()
-  (should (equal "hello world\n" (org-export-string-as "hello world" 'jira))))
+  (should (equal "hello world\n" (to-jira "hello world"))))
 
 ;; Let's do some standalone tests of very simple markup for inline text
 ;; effects.
 ;;
 (ert-deftest ox-jira-test/text-effects ()
-  (should (equal "this is *strong* text\n" (org-export-string-as "this is *strong* text" 'jira)))
-  (should (equal "this is _emphasised_ text\n" (org-export-string-as "this is /emphasised/ text" 'jira)))
-  (should (equal "this is +underlined+ text\n" (org-export-string-as "this is _underlined_ text" 'jira)))
-  (should (equal "this is -deleted- text\n" (org-export-string-as "this is +deleted+ text" 'jira)))
-  (should (equal "this is {{inline code}}\n" (org-export-string-as "this is ~inline code~" 'jira)))
-  (should (equal "this is {{verbatim}} text\n" (org-export-string-as "this is =verbatim= text" 'jira))))
+  (should (equal "this is *strong* text\n" (to-jira "this is *strong* text")))
+  (should (equal "this is _emphasised_ text\n" (to-jira "this is /emphasised/ text")))
+  (should (equal "this is +underlined+ text\n" (to-jira "this is _underlined_ text")))
+  (should (equal "this is -deleted- text\n" (to-jira "this is +deleted+ text")))
+  (should (equal "this is {{inline code}}\n" (to-jira "this is ~inline code~")))
+  (should (equal "this is {{verbatim}} text\n" (to-jira "this is =verbatim= text"))))
 
 ;; Test that super^script and sub_script have empty anchor immediately
 ;; preceeding, so they can be tacked at the end of words without whitespace
 ;; immediately before it.
 ;;
 (ert-deftest ox-jira-test/embeddable-text-effects ()
-  (should (equal "this is super{anchor}^scripted^ text\n" (org-export-string-as "this is super^scripted text" 'jira)))
-  (should (equal "this is sub{anchor}~scripted~ text\n" (org-export-string-as "this is sub_scripted text" 'jira))))
+  (should (equal "this is super{anchor}^scripted^ text\n" (to-jira "this is super^scripted text")))
+  (should (equal "this is sub{anchor}~scripted~ text\n" (to-jira "this is sub_scripted text"))))
 
 ;; Quotations are a bit more elaborate, so let's test those separately. They
 ;; can have other text effects inside them too.
@@ -61,20 +64,20 @@ This is a quote.
 
 It can have multiple paragraphs.
 {quote}
-" (org-export-string-as "
+" (to-jira "
 #+BEGIN_QUOTE
 This is a quote.
 
 It can have multiple paragraphs.
-#+END_QUOTE" 'jira)))
+#+END_QUOTE")))
 
   (should (equal "{quote}
 This is a quote with _emphasis_.
 {quote}
-" (org-export-string-as "
+" (to-jira "
 #+begin_quote
 This is a quote with /emphasis/.
-#+end_quote" 'jira))))
+#+end_quote"))))
 
 ;; Headline numbering in org is *relative*, so we cannot test that they work
 ;; one-by-one.
@@ -83,89 +86,89 @@ This is a quote with /emphasis/.
   (should (equal "h1. top level
 h2. second level
 h3. third level
-" (org-export-string-as "* top level
+" (to-jira "* top level
 ** second level
-*** third level" 'jira))))
+*** third level"))))
 
 ;; As far as I understand these are not useful in JIRA output, so let's just
 ;; filter them out.
 ;;
 (ert-deftest ox-jira-test/keywords()
-  (should (equal "" (org-export-string-as "#+TITLE: MyTitle
+  (should (equal "" (to-jira "#+TITLE: MyTitle
 #+DATE: 2016-02-26
-#+OPTIONS: f:t" 'jira))))
+#+OPTIONS: f:t"))))
 
 (ert-deftest ox-jira-test/links ()
   (should (equal "fi [http://jira.atlassian.com] fo\n"
-                 (org-export-string-as "fi [[http://jira.atlassian.com]] fo" 'jira)))
+                 (to-jira "fi [[http://jira.atlassian.com]] fo")))
   (should (equal "fi [Jira|http://jira.atlassian.com] fo\n"
-                 (org-export-string-as "fi [[http://jira.atlassian.com][Jira]] fo" 'jira))))
+                 (to-jira "fi [[http://jira.atlassian.com][Jira]] fo"))))
 
 ;; Check that text in paragraphs does not have hard newlines.
 ;;
 (ert-deftest ox-jira-test/paragraphs ()
-  (should (equal "fi fo fa fum\n" (org-export-string-as "fi
+  (should (equal "fi fo fa fum\n" (to-jira "fi
 fo
 fa
-fum" 'jira))))
+fum"))))
 
 (ert-deftest ox-jira-test/unordered-lists()
   (should (equal "* fi
 * fo
 * fa
 * fum
-" (org-export-string-as "- fi
+" (to-jira "- fi
 - fo
 - fa
-- fum" 'jira))))
+- fum"))))
 
 (ert-deftest ox-jira-test/ordered-lists()
   (should (equal "# fi
 # fo
 # fa
 # fum
-" (org-export-string-as "1. fi
+" (to-jira "1. fi
 2. fo
 3. fa
-3. fum" 'jira))))
+3. fum"))))
 
 (ert-deftest ox-jira-test/nested-lists()
   (should (equal "* fi
 ** fo
 *** fa
 **** fum
-" (org-export-string-as "- fi
+" (to-jira "- fi
   - fo
     - fa
-      - fum" 'jira)))
+      - fum")))
   (should (equal "* fi
 *# fo
 *#* fa
 *#*# fum
-" (org-export-string-as "- fi
+" (to-jira "- fi
   1. fo
     - fa
-      1. fum" 'jira))))
+      1. fum"))))
 
 (ert-deftest ox-jira-test/unordered-list-with-checkboxes()
   (should (equal "* (x) fi
 * (/) fo
-" (org-export-string-as "- [ ] fi
-- [X] fo" 'jira))))
+" (to-jira "- [ ] fi
+- [X] fo"))))
 
 (ert-deftest ox-jira-test/checkboxes-and-statistics()
   (should (equal "* (i) Progress \\[50%]
 ** (x) fi
 ** (/) fo
-" (org-export-string-as "- [-] Progress [50%]
+" (to-jira "- [-] Progress [50%]
   - [ ] fi
-  - [X] fo" 'jira))))
+  - [X] fo"))))
 
 (ert-deftest ox-jira-test/definition-lists()
   (should (equal "* *fi*: fo
 * *fa*: fum
-" (org-export-string-as "- fi :: fo
-- fa :: fum" 'jira))))
+" (to-jira "- fi :: fo
+- fa :: fum"))))
 
 ;; This is not really supported by JIRA, so we have to fake it.
 ;;
@@ -173,17 +176,17 @@ fum" 'jira))))
   (should (equal "# fi
 fo
 # fa
-" (org-export-string-as "1. fi
+" (to-jira "1. fi
 
    fo
-2. fa" 'jira)))
+2. fa")))
 
   (should (equal "# fi
 #* fifi
 #* fofo
 # fa
 # fum
-" (org-export-string-as "1. fi
+" (to-jira "1. fi
 
   * fifi
 
@@ -191,7 +194,7 @@ fo
 
 2. fa
 
-3. fum" 'jira)))
+3. fum")))
 
   (should (equal "# fi
 #* {code:sql}SELECT 1;
@@ -200,7 +203,7 @@ fo
 {code}
 #* fofo
 # fa
-" (org-export-string-as "1. fi
+" (to-jira "1. fi
 
   *
     #+begin_src sql
@@ -214,42 +217,42 @@ fo
   * fofo
 
 2. fa
-" 'jira)))
+")))
   )
 
 (ert-deftest ox-jira-test/plain-text ()
   (should (equal "fi fo \\[fa] fum
-" (org-export-string-as "fi fo [fa] fum" 'jira))))
+" (to-jira "fi fo [fa] fum"))))
 
 (ert-deftest ox-jira-test/src-blocks ()
   (should (equal "{code}echo hello
 # echo world
 {code}
-" (org-export-string-as "#+begin_src sh
+" (to-jira "#+begin_src sh
      echo hello
      # echo world
      #+end_src
-" 'jira)))
+")))
   (should (equal "{code:sql}BEGIN;
 SELECT NOW();
 END;
 {code}
-" (org-export-string-as "#+begin_src sql
+" (to-jira "#+begin_src sql
      BEGIN;
      SELECT NOW();
      END;
      #+end_src
-" 'jira))))
+"))))
 
 ;; The Holy Grail. Do me proud, Org mode!
 ;;
 (ert-deftest ox-jira-test/tables ()
   (should (equal "| a | b |
 | c | d |
-" (org-export-string-as "
+" (to-jira "
 | a | b |
 | c | d |
-" 'jira)))
+")))
 
   ;; This should really be
   ;; : || a || b ||
@@ -259,11 +262,11 @@ END;
   ;; checks that we at least ignore the horizontal lines.
   (should (equal "|| a || b ||
 | c | d |
-" (org-export-string-as "
+" (to-jira "
 | a | b |
 |---+---|
 | c | d |
-" 'jira))))
+"))))
 
 (ert-deftest ox-jira-test/example-blocks ()
   (should (equal "{noformat}
@@ -271,12 +274,12 @@ stuff that should
  not be
 formatted
 {noformat}
-" (org-export-string-as "#+begin_example
+" (to-jira "#+begin_example
 stuff that should
  not be
 formatted
 #+end_example
-" 'jira))))
+"))))
 
 (ert-deftest ox-jira-test/fixed-width-blocks ()
   (should (equal "{noformat}
@@ -284,16 +287,16 @@ stuff that should
  not be
 formatted
 {noformat}
-" (org-export-string-as ": stuff that should
+" (to-jira ": stuff that should
 :  not be
 : formatted
-" 'jira))))
+"))))
 
 (ert-deftest ox-jira-test/horizontal-rule ()
   (should
-   (equal "----\n" (org-export-string-as "-----\n" 'jira)))
+   (equal "----\n" (to-jira "-----\n")))
   (should
-   (equal "----\n" (org-export-string-as "-------\n" 'jira))))
+   (equal "----\n" (to-jira "-------\n"))))
 
 (ert-deftest ox-jira-test/footnotes ()
   (should (equal "fi fo{anchor:backfn1}[^1^|#fn1]. Another one{anchor:backfn2}[^2^|#fn2].
@@ -301,14 +304,14 @@ formatted
 h1. Footnotes
 {anchor:fn1}[^1^|#backfn1] fa fum.
 {anchor:fn2}[^2^|#backfn2] fut fut.
-" (org-export-string-as "fi fo[fn:1]. Another one[fn:2].
+" (to-jira "fi fo[fn:1]. Another one[fn:2].
 
 * Footnotes
 
 [fn:1] fa fum.
 
 [fn:2] fut fut.
-" 'jira))))
+"))))
 
 (provide 'ox-jira-test)
 
