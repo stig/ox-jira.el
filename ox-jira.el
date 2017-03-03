@@ -107,7 +107,7 @@
 ;; implemented yet, to avoid missing it.
 ;;
 (defun ox-jira--not-implemented (element-type)
-  "Replace anything we don't handle yet wiht a big red marker."
+  "Replace anything we don't handle yet with a big red marker."
   (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
 
 ;; Super^script and sub_script I often want at the end of words, with no
@@ -326,7 +326,7 @@ channel."
   (format "{{%s}}" (org-element-property :value verbatim)))
 
 ;; One of the most annoying things about JIRA markup is the way it doesn't
-;; reflow text properly, so any linebreaks becomes hard linebreaks in the
+;; reflow text properly, so any linebreaks become hard linebreaks in the
 ;; rendered output. Let's fix that!
 ;;
 ;; What we need to do is replace any *internal* newlines (i.e. any not at the
@@ -377,7 +377,7 @@ the plist used as a communication channel."
   contents)
 
 ;; JIRA supports formatting for these languages: actionscript, html,
-;; java,javascript, sql, xhtml, xml. If none of them fits, we can use 'none',
+;; java, javascript, sql, xhtml, xml. If none of them fits, we can use 'none',
 ;; or leave out the language altogether, which I imagine will be a bit like
 ;; ={noformat}=.
 ;;
@@ -434,7 +434,7 @@ contextual information."
   contents)
 
 ;; We only want to output =standard= rows, not horizontal lines. I'm not sure
-;; if detection of header rows belong here or in the cells.
+;; if detection of header rows belongs here or in the cells.
 ;;
 (defun ox-jira-table-row (table-row contents info)
   "Transcode a TABLE-ROW element from Org to JIRA.
