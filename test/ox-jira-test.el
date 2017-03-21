@@ -247,7 +247,7 @@ END;
 SELECT NOW();
 END;
 {code}
-" (to-jira "#+NAME: Hello
+" (to-jira "#+CAPTION: Hello
      #+begin_src sql
      BEGIN;
      SELECT NOW();
@@ -255,12 +255,12 @@ END;
      #+end_src
 ")))
 
-  (should (equal "{code:title=Hello|language=sql|collapse=true}BEGIN;
+  (should (equal "{code:title=Hello World|language=sql|collapse=true}BEGIN;
 SELECT NOW();
 SELECT NOW();
 END;
 {code}
-" (to-jira "#+NAME: Hello
+" (to-jira "#+CAPTION: Hello World
      #+begin_src sql
      BEGIN;
      SELECT NOW();
