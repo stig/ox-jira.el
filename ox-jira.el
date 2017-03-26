@@ -42,16 +42,16 @@
 
 
 ;;; User Configurable Options
-(defgroup org-export-jira nil
+(defgroup ox-jira-export nil
   "Options specific to JIRA export back-end."
   :tag "Org Export JIRA"
   :group 'org-export
   :version "24.4"
   :package-version '(ox-jira . "0.1"))
 
-(defcustom org-jira-src-collapse-threshold 30
+(defcustom ox-jira-src-collapse-threshold 30
   "Minimum number of lines in a src block to set collapse=true in JIRA/Confluence {code} block."
-  :group 'org-export-jira
+  :group 'ox-export-jira
   :type '(integer))
 
 
@@ -114,7 +114,7 @@
     (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
   :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
   :options-alist
-  '((:src-collapse-threshold nil nil org-jira-src-collapse-threshold))
+  '((:src-collapse-threshold nil nil ox-jira-src-collapse-threshold))
   :menu-entry
   '(?j "Export to JIRA"
        ((?j "As JIRA buffer" ox-jira-export-as-jira))))
