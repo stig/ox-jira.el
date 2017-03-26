@@ -26,7 +26,7 @@
 (require 'ox-jira)
 
 (defun to-jira (string)
-  (org-export-string-as string 'jira))
+  (org-export-string-as string 'jira nil '(:src-collapse-threshold 3)))
 
 ;; This is my first foray into testing in Emacs. Please be kind.
 
@@ -197,9 +197,9 @@ fo
 3. fum")))
 
   (should (equal "# fi
-#* {code:sql}SELECT 1;
+#* {code:title=|language=sql|collapse=false}SELECT 1;
 {code}
-{code:sql}SELECT 2;
+{code:title=|language=sql|collapse=false}SELECT 2;
 {code}
 #* fofo
 # fa
@@ -225,7 +225,7 @@ fo
 " (to-jira "fi fo [fa] fum"))))
 
 (ert-deftest ox-jira-test/src-blocks ()
-  (should (equal "{code}echo hello
+  (should (equal "{code:title=|language=none|collapse=false}echo hello
 # echo world
 {code}
 " (to-jira "#+begin_src sh
@@ -233,7 +233,7 @@ fo
      # echo world
      #+end_src
 ")))
-  (should (equal "{code:sql}BEGIN;
+  (should (equal "{code:title=|language=sql|collapse=false}BEGIN;
 SELECT NOW();
 END;
 {code}
@@ -242,7 +242,33 @@ END;
      SELECT NOW();
      END;
      #+end_src
-"))))
+")))
+  (should (equal "{code:title=Hello|language=sql|collapse=false}BEGIN;
+SELECT NOW();
+END;
+{code}
+" (to-jira "#+CAPTION: Hello
+     #+begin_src sql
+     BEGIN;
+     SELECT NOW();
+     END;
+     #+end_src
+")))
+
+  (should (equal "{code:title=Hello World|language=sql|collapse=true}BEGIN;
+SELECT NOW();
+SELECT NOW();
+END;
+{code}
+" (to-jira "#+CAPTION: Hello World
+     #+begin_src sql
+     BEGIN;
+     SELECT NOW();
+     SELECT NOW();
+     END;
+     #+end_src
+")))
+  )
 
 ;; The Holy Grail. Do me proud, Org mode!
 ;;

@@ -40,6 +40,23 @@
 (require 'ox)
 (require 'ox-publish)
 
+
+;;; User Configurable Options
+(defgroup ox-jira-export nil
+  "Options specific to JIRA export back-end."
+  :tag "Org Export JIRA"
+  :group 'org-export
+  :version "24.4"
+  :package-version '(ox-jira . "0.1"))
+
+(defcustom ox-jira-src-collapse-threshold 30
+  "Minimum number of lines in a src block to set collapse=true in JIRA/Confluence {code} block."
+  :group 'ox-export-jira
+  :type '(integer))
+
+
+
+;;; Defining Backend
 (org-export-define-backend 'jira
   '((babel-call . (lambda (&rest args) (ox-jira--not-implemented 'babel-call)))
     (body . (lambda (&rest args) (ox-jira--not-implemented 'body)))
@@ -96,6 +113,8 @@
     (verbatim . ox-jira-verbatim)
     (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
   :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
+  :options-alist
+  '((:src-collapse-threshold nil nil ox-jira-src-collapse-threshold))
   :menu-entry
   '(?j "Export to JIRA"
        ((?j "As JIRA buffer" ox-jira-export-as-jira))))
@@ -386,13 +405,15 @@ the plist used as a communication channel."
 CONTENTS holds the contents of the src-block.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
-    (let* ((lang (org-element-property :language src-block))
-           (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang))
-           (code (org-export-format-code-default src-block info)))
+    (let* ((title (apply #'concat (org-export-get-caption src-block)))
+           (lang (org-element-property :language src-block))
+           (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang "none"))
+           (code (org-export-format-code-default src-block info))
+           (collapse (if (< (plist-get info :src-collapse-threshold)
+                            (org-count-lines code))
+                         "true" "false")))
       (concat
-       (if lang
-           (format "{code:%s}" lang)
-         "{code}")
+       (format "{code:title=%s|language=%s|collapse=%s}" title lang collapse)
        code
        "{code}"))))
 
