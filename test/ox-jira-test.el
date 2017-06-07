@@ -325,11 +325,11 @@ formatted
    (equal "----\n" (to-jira "-------\n"))))
 
 (ert-deftest ox-jira-test/footnotes ()
-  (should (equal "fi fo{anchor:backfn1}[^1^|#fn1]. Another one{anchor:backfn2}[^2^|#fn2].
+  (should (equal "fi fo{anchor:fnr1}[^1^|#fn1]. Another one{anchor:fnr2}[^2^|#fn2].
 
 h1. Footnotes
-{anchor:fn1}[^1^|#backfn1] fa fum.
-{anchor:fn2}[^2^|#backfn2] fut fut.
+{anchor:fn1}[^1^|#fnr1] fa fum.
+{anchor:fn2}[^2^|#fnr2] fut fut.
 " (to-jira "fi fo[fn:1]. Another one[fn:2].
 
 * Footnotes
