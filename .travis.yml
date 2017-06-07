@@ -1,8 +1,7 @@
 language: emacs-lisp
 sudo: false
 env:
-  - EMACS_VERSION=24.5
-  - EMACS_VERSION=25.1
+  - EMACS_VERSION=25.2
 before_install:
   # Configure $PATH: Executables are installed to $HOME/bin
   - export PATH="$HOME/bin:$PATH"
