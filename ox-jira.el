@@ -211,8 +211,8 @@ information."
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let* ((anchor (ox-jira--footnote-anchor footnote-reference))
-        (ref (ox-jira--footnote-ref anchor)))
-    (format "{anchor:back%s}[^%s^|#%s]"
+         (ref (ox-jira--footnote-ref anchor)))
+    (format "{anchor:fnr%s}[^%s^|#fn%s]"
             anchor ref anchor)))
 
 (defun ox-jira-footnote-definition (footnote-definition contents info)
@@ -221,7 +221,7 @@ CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let* ((anchor (ox-jira--footnote-anchor footnote-definition))
          (ref (ox-jira--footnote-ref anchor)))
-    (format "{anchor:%s}[^%s^|#back%s] %s"
+    (format "{anchor:fn%s}[^%s^|#fnr%s] %s"
             anchor ref anchor contents)))
 
 ;; Headlines are a little bit more complex. I'm not even attempting to support
