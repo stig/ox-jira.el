@@ -90,6 +90,27 @@ h3. third level
 ** second level
 *** third level"))))
 
+
+(ert-deftest ox-jira-test/todo-headlines ()
+  (should
+   (equal "h1. {color:lightgreen}{{DONE}}{color} This is a headline
+h1. {color:red}{{TODO}}{color} This is another headline
+" (to-jira "* DONE This is a headline
+* TODO This is another headline"))))
+
+(ert-deftest ox-jira-test/tag-headlines ()
+  (should (equal "h1. This is a headline {color:blue}{{:TAG:XXX:}}{color}
+h1. This is another headline {color:blue}{{:FOO:BAR:}}{color}
+" (to-jira "* This is a headline :TAG:XXX:
+* This is another headline :FOO:BAR:"))))
+
+
+(ert-deftest ox-jira-test/full-headlines ()
+  (should (equal "h1. {color:lightgreen}{{DONE}}{color} This is a headline {color:blue}{{:TAG:XXX:}}{color}
+h1. {color:red}{{TODO}}{color} This is another headline {color:blue}{{:FOO:BAR:}}{color}
+" (to-jira "* DONE This is a headline :TAG:XXX:
+* TODO This is another headline :FOO:BAR:"))))
+
 ;; As far as I understand these are not useful in JIRA output, so let's just
 ;; filter them out.
 ;;

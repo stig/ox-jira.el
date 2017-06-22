@@ -240,9 +240,23 @@ the plist used as a communication channel."
   (let* ((level (org-export-get-relative-level headline info))
          (title (org-export-data-with-backend
                  (org-element-property :title headline)
-                 'jira info)))
+                 'jira info))
+         (todo (and (plist-get info :with-todo-keywords)
+                    (let ((todo (org-element-property :todo-keyword headline)))
+                      (and todo (org-export-data todo info)))))
+         (todo-type (and todo (org-element-property :todo-type headline)))
+         (todo-text (if todo
+                        (format "{color:%s}{{%s}}{color} "
+                                (if (eq todo-type 'done) "lightgreen" "red")
+                                todo)
+                      ""))
+         (tags (and (plist-get info :with-tags)
+                    (org-export-get-tags headline info)))
+         (tags-text (if tags
+                        (format " {color:blue}{{:%s:}}{color}" (string-join tags ":"))
+                      "")))
     (concat
-     (format "h%d. %s\n" level title)
+     (format "h%d. %s%s%s\n" level todo-text title tags-text)
      contents)))
 
 (defun ox-jira-horizontal-rule (horizontal-rule contents info)
