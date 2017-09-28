@@ -492,7 +492,7 @@ contextual information."
          (group (org-export-table-row-group row info))
          (is-header (and has-header (eq 1 group)))
          (sep (if is-header "||" "|")))
-    (format "%s %s %s" sep contents
+    (format "%s %s %s" sep (if contents contents "")
             (if (org-export-last-sibling-p table-cell info) sep ""))))
 
 ;; This is updated to show progress of subsequent list of check boxes.

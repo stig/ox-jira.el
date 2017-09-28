@@ -301,6 +301,13 @@ END;
 | c | d |
 ")))
 
+  (should (equal "|  | b |
+| c |  |
+" (to-jira "
+|  | b |
+| c |  |
+")))
+
   ;; This should really be
   ;; : || a || b ||
   ;; : | c | d |
