@@ -79,4 +79,3 @@
   valuable contribution.
 
   Running the =./run-tests.sh= script should run all the tests automatically.
-  You'll need [[https://cask.github.io][Cask]] installed to run this script.
