@@ -39,6 +39,7 @@
 (eval-when-compile (require 'cl))
 (require 'ox)
 (require 'ox-publish)
+(require 'subr-x)
 
 
 ;;; User Configurable Options
