@@ -1,7 +1,7 @@
 language: emacs-lisp
 sudo: false
-env:
   - EMACS_VERSION=25.2
+  - EMACS_VERSION=snapshot
 before_install:
   # Configure $PATH: Executables are installed to $HOME/bin
   - export PATH="$HOME/bin:$PATH"
@@ -10,9 +10,6 @@ before_install:
   # Install Emacs (according to $EMACS_VERSION) and Cask
   - make -f emacs-travis.mk install_emacs
   - make -f emacs-travis.mk install_cask
-install:
-  # Install your dependencies
-  - cask install
 script:
   # Run your tests
   - ./run-tests.sh
