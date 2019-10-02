@@ -526,6 +526,7 @@ CONTENTS is nil. INFO is a plist holding contextual information."
                (otherwise "_%s_"))))
     (format fmt value)))
 
+;;;###autoload
 (defun ox-jira-export-as-jira
     (&optional async subtreep visible-only body-only ext-plist)
   "Export current buffer as a Jira buffer.
