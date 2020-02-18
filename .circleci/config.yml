@@ -1,0 +1,18 @@
+version: 2.1
+
+executors:
+  emacs26:
+    docker:
+      - image: silex/emacs:26.3
+
+jobs:
+  tests:
+    executor: emacs26
+    steps:
+      - checkout
+      - run: ./run-tests.sh
+
+workflows:
+  integrate:
+    jobs:
+      - tests
