@@ -97,13 +97,37 @@ actual code of our package. I'm excited!
 ** Require libraries
 
 The first thing our code needs to do is require the libraries we need.
-This is cargo-culted from =ox-latex.el=.
+I cargo-culted most of this from =ox-latex.el=.
 
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'cl))
   (require 'ox)
   (require 'ox-publish)
+  (require 'subr-x)
 #+END_SRC
+
+** User-Configurable options
+
+For really long source snippets or sections of logfiles JIRA supports
+showing a preview, and /collapsing/ the rest. How much to preview before
+collapsing the rest is up to individual taste, so let's make it
+configurable.
+
+#+begin_src emacs-lisp
+  ;;; User Configurable Options
+
+  (defgroup ox-jira-export nil
+    "Options specific to JIRA export back-end."
+    :tag "Org Export JIRA"
+    :group 'org-export
+    :version "24.4"
+    :package-version '(ox-jira . "0.1"))
+
+  (defcustom ox-jira-src-collapse-threshold 30
+    "Minimum number of lines in a src block to set collapse=true in JIRA/Confluence {code} block."
+    :group 'ox-export-jira
+    :type '(integer))
+#+end_src
 
 ** Define Backend
 
@@ -114,6 +138,8 @@ in the next section. Finally it tells the Org export backend how to
 create a menu entry for us.
 
 #+BEGIN_SRC emacs-lisp
+  ;;; Defining Backend
+
   (org-export-define-backend 'jira
     '((babel-call . (lambda (&rest args) (ox-jira--not-implemented 'babel-call)))
       (body . (lambda (&rest args) (ox-jira--not-implemented 'body)))
@@ -165,15 +191,19 @@ create a menu entry for us.
       (table-cell . ox-jira-table-cell)
       (table-row . ox-jira-table-row)
       (target . (lambda (&rest args) (ox-jira--not-implemented 'target)))
-      (timestamp . (lambda (&rest args) (ox-jira--not-implemented 'timestamp)))
+      (timestamp . ox-jira-timestamp)
       (underline . ox-jira-underline)
       (verbatim . ox-jira-verbatim)
       (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
     :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
+    :options-alist '((:src-collapse-threshold nil nil ox-jira-src-collapse-threshold))
     :menu-entry
     '(?j "Export to JIRA"
          ((?j "As JIRA buffer" ox-jira-export-as-jira))))
 #+END_SRC
+
+Note that at the ~options-alist~ at the end of that backend definition
+we add our config option.
 
 ** Internal helpers
 
@@ -205,7 +235,7 @@ is admittedly a bit of a hack, but I haven't found anything better.
 ** Filters
 
 #+BEGIN_SRC emacs-lisp
-     ;;; Filters
+  ;;; Filters
 #+END_SRC
 
 Org support a single blank line between items in a list, but if we
@@ -311,8 +341,8 @@ Footnotes have two parts: the reference, and the definition.
   CONTENTS is nil.  INFO is a plist holding contextual
   information."
     (let* ((anchor (ox-jira--footnote-anchor footnote-reference))
-          (ref (ox-jira--footnote-ref anchor)))
-      (format "{anchor:back%s}[^%s^|#%s]"
+           (ref (ox-jira--footnote-ref anchor)))
+      (format "{anchor:fnr%s}[^%s^|#fn%s]"
               anchor ref anchor)))
 
   (defun ox-jira-footnote-definition (footnote-definition contents info)
@@ -321,7 +351,7 @@ Footnotes have two parts: the reference, and the definition.
   information."
     (let* ((anchor (ox-jira--footnote-anchor footnote-definition))
            (ref (ox-jira--footnote-ref anchor)))
-      (format "{anchor:%s}[^%s^|#back%s] %s"
+      (format "{anchor:fn%s}[^%s^|#fnr%s] %s"
               anchor ref anchor contents)))
 #+END_SRC
 
@@ -345,9 +375,23 @@ That's a bit weird, but there you go.
     (let* ((level (org-export-get-relative-level headline info))
            (title (org-export-data-with-backend
                    (org-element-property :title headline)
-                   'jira info)))
+                   'jira info))
+           (todo (and (plist-get info :with-todo-keywords)
+                      (let ((todo (org-element-property :todo-keyword headline)))
+                        (and todo (org-export-data todo info)))))
+           (todo-type (and todo (org-element-property :todo-type headline)))
+           (todo-text (if todo
+                          (format "{color:%s}{{%s}}{color} "
+                                  (if (eq todo-type 'done) "lightgreen" "red")
+                                  todo)
+                        ""))
+           (tags (and (plist-get info :with-tags)
+                      (org-export-get-tags headline info)))
+           (tags-text (if tags
+                          (format " {color:blue}{{:%s:}}{color}" (string-join tags ":"))
+                        "")))
       (concat
-       (format "h%d. %s\n" level title)
+       (format "h%d. %s%s%s\n" level todo-text title tags-text)
        contents)))
 #+END_SRC
 
@@ -424,7 +468,7 @@ with a bullet list and some bold text for the term.
          (concat checkbox " "))
        (when tag
          (format "*%s*: " tag))
-         contents)))
+       contents)))
 #+END_SRC
 
 *** Link
@@ -553,13 +597,15 @@ java, javascript, sql, xhtml, xml. If none of them fits, we can use
   CONTENTS holds the contents of the src-block.  INFO is a plist holding
   contextual information."
     (when (org-string-nw-p (org-element-property :value src-block))
-      (let* ((lang (org-element-property :language src-block))
-             (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang))
-             (code (org-export-format-code-default src-block info)))
+      (let* ((title (apply #'concat (org-export-get-caption src-block)))
+             (lang (org-element-property :language src-block))
+             (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang "none"))
+             (code (org-export-format-code-default src-block info))
+             (collapse (if (< (plist-get info :src-collapse-threshold)
+                              (org-count-lines code))
+                           "true" "false")))
         (concat
-         (if lang
-             (format "{code:%s}" lang)
-           "{code}")
+         (format "{code:title=%s|language=%s|collapse=%s}" title lang collapse)
          code
          "{code}"))))
 #+END_SRC
@@ -641,7 +687,7 @@ a header cell.
            (group (org-export-table-row-group row info))
            (is-header (and has-header (eq 1 group)))
            (sep (if is-header "||" "|")))
-      (format "%s %s %s" sep contents
+      (format "%s %s %s" sep (if contents contents "")
               (if (org-export-last-sibling-p table-cell info) sep ""))))
 #+END_SRC
 
@@ -682,6 +728,21 @@ support, so we might as well do it.
   holding contextual information."
     (format "{quote}\n%s{quote}" contents))
 #+END_SRC
+
+*** Timestamp
+
+#+begin_src emacs-lisp
+  (defun ox-jira-timestamp (timestamp _contents info)
+    "Transcode a TIMESTAMP object from Org to JIRA.
+  CONTENTS is nil. INFO is a plist holding contextual information."
+    (let ((value (org-timestamp-translate timestamp))
+          (fmt (cl-case (org-element-property :type timestamp)
+                 ((active active-range) "_%s_")
+                 ((inactive inactive-range) "_\\%s_")
+                 (otherwise "_%s_"))))
+      (format fmt value)))
+
+#+end_src
 
 ** End-user functions
 
