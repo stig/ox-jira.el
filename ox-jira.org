@@ -492,6 +492,10 @@ but we must make a token effort. A lot of this code is cribbed from
                    (concat type ":" raw-path))
                   ((string= type "file")
                    (org-export-file-uri raw-path))
+                  ((string= type "custom-id")
+                   (if desc (concat "#" desc) (concat "#" raw-path)))
+                  ((string-prefix-p "*" raw-path)
+                   (concat "#" (seq-subseq raw-path 1)))
                   (t raw-path))))
       (cond
        ;; Link with description

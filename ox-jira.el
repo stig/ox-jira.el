@@ -284,6 +284,10 @@ INFO is a plist holding contextual information.  See
                  (concat type ":" raw-path))
                 ((string= type "file")
                  (org-export-file-uri raw-path))
+                ((string= type "custom-id")
+                 (if desc (concat "#" desc) (concat "#" raw-path)))
+                ((string-prefix-p "*" raw-path)
+                 (concat "#" (seq-subseq raw-path 1)))
                 (t raw-path))))
     (cond
      ;; Link with description
