@@ -123,7 +123,15 @@ h1. {color:red}{{TODO}}{color} This is another headline {color:blue}{{:FOO:BAR:}
   (should (equal "fi [http://jira.atlassian.com] fo\n"
                  (to-jira "fi [[http://jira.atlassian.com]] fo")))
   (should (equal "fi [Jira|http://jira.atlassian.com] fo\n"
-                 (to-jira "fi [[http://jira.atlassian.com][Jira]] fo"))))
+                 (to-jira "fi [[http://jira.atlassian.com][Jira]] fo")))
+  (should (equal "see [#Heading Name] for details\n"
+                 (to-jira "see [[*Heading Name]] for details")))
+  (should (equal "see [This Thing|#Heading Name] for details\n"
+                 (to-jira "see [[*Heading Name][This Thing]] for details")))
+  (should (equal "see [#Heading Name] for details\n"
+                 (to-jira "see [[#Heading Name]] for details")))
+  (should (equal "see [This Thing|#This Thing] for details\n"
+                 (to-jira "see [[#Heading Name][This Thing]] for details"))))
 
 ;; Check that text in paragraphs does not have hard newlines.
 ;;
