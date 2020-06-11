@@ -56,11 +56,35 @@
 
 (defcustom ox-jira-src-supported-languages
   '("actionscript"
+    "ada"
+    "applescript"
+    "c"
+    "c#"
+    "c++"
+    "css"
+    "erlang"
+    "go"
+    "groovy"
     "html"
+    "haskell"
+    "json"
     "java"
     "javascript"
+    "lua"
+    "nyan"
+    "objc"
+    "php"
+    "perl"
+    "python"
+    "r"
+    "ruby"
     "sql"
-    "xml")
+    "scala"
+    "swift"
+    "visualbasic"
+    "xml"
+    "yaml"
+    "bash")
   "Supported languages for syntax highlighting."
   :group 'ox-export-jira
   :type '(list))
