@@ -54,6 +54,18 @@
   :group 'ox-export-jira
   :type '(integer))
 
+(defcustom ox-jira-src-supported-languages
+  '("actionscript"
+    "html"
+    "java"
+    "javascript"
+    "sql"
+    "xml"
+    "xhtml")
+  "Supported languages for syntax highlighting."
+  :group 'ox-export-jira
+  :type '(list))
+
 ;;; Defining Backend
 
 (org-export-define-backend 'jira
@@ -342,7 +354,7 @@ contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
     (let* ((title (apply #'concat (org-export-get-caption src-block)))
            (lang (org-element-property :language src-block))
-           (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang "none"))
+           (lang (if (member lang ox-jira-src-supported-languages) lang "none"))
            (code (org-export-format-code-default src-block info))
            (collapse (if (< (plist-get info :src-collapse-threshold)
                             (org-count-lines code))
