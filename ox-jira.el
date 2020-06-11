@@ -60,8 +60,7 @@
     "java"
     "javascript"
     "sql"
-    "xml"
-    "xhtml")
+    "xml")
   "Supported languages for syntax highlighting."
   :group 'ox-export-jira
   :type '(list))
