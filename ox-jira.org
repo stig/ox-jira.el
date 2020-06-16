@@ -122,11 +122,54 @@ configurable.
     :group 'org-export
     :version "24.4"
     :package-version '(ox-jira . "0.1"))
+#+end_src
 
+*** Long source snippets
+#+begin_src emacs-lisp
   (defcustom ox-jira-src-collapse-threshold 30
     "Minimum number of lines in a src block to set collapse=true in JIRA/Confluence {code} block."
     :group 'ox-export-jira
     :type '(integer))
+#+end_src
+
+*** Supported languages
+JIRA supports formatting for these languages:
+
+#+begin_src emacs-lisp
+  (defcustom ox-jira-src-supported-languages
+    '("actionscript"
+      "ada"
+      "applescript"
+      "c"
+      "c#"
+      "c++"
+      "css"
+      "erlang"
+      "go"
+      "groovy"
+      "html"
+      "haskell"
+      "json"
+      "java"
+      "javascript"
+      "lua"
+      "nyan"
+      "objc"
+      "php"
+      "perl"
+      "python"
+      "r"
+      "ruby"
+      "sql"
+      "scala"
+      "swift"
+      "visualbasic"
+      "xml"
+      "yaml"
+      "bash")
+    "Supported languages for syntax highlighting."
+    :group 'ox-export-jira
+    :type '(list))
 #+end_src
 
 ** Define Backend
@@ -591,9 +634,8 @@ to happen. I've essentially cribbed this from =ox-latex.el=.
 
 *** Source code block
 
-JIRA supports formatting for these languages: actionscript, html,
-java, javascript, sql, xhtml, xml. If none of them fits, we can use
-=none=, which I imagine will be a bit like ={noformat}=.
+If language is not member of =ox-jira-src-supported-languages=, =none=, will be used
+which I imagine will be a bit like ={noformat}=.
 
 #+BEGIN_SRC emacs-lisp
   (defun ox-jira-src-block (src-block contents info)
@@ -603,7 +645,7 @@ java, javascript, sql, xhtml, xml. If none of them fits, we can use
     (when (org-string-nw-p (org-element-property :value src-block))
       (let* ((title (apply #'concat (org-export-get-caption src-block)))
              (lang (org-element-property :language src-block))
-             (lang (if (member lang '("actionscript" "html" "java" "javascript" "sql" "xhtml" "xml")) lang "none"))
+             (lang (if (member lang ox-jira-src-supported-languages) lang "none"))
              (code (org-export-format-code-default src-block info))
              (collapse (if (< (plist-get info :src-collapse-threshold)
                               (org-count-lines code))
