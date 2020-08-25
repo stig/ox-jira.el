@@ -101,7 +101,7 @@
     (diary-sexpexample-block . (lambda (&rest args) (ox-jira--not-implemented 'diary-sexpexample-block)))
     (drawer . (lambda (&rest args) (ox-jira--not-implemented 'drawer)))
     (dynamic-block . (lambda (&rest args) (ox-jira--not-implemented 'dynamic-block)))
-    (entity . (lambda (&rest args) (ox-jira--not-implemented 'entity)))
+    (entity . ox-jira-entity)
     (example-block . ox-jira-example-block)
     (export-block . (lambda (&rest args) (ox-jira--not-implemented 'export-block)))
     (export-snippet . (lambda (&rest args) (ox-jira--not-implemented 'export-snippet)))
@@ -193,6 +193,12 @@ contextual information."
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value code)))
+
+(defun ox-jira-entity (entity _contents info)
+  "Transcode a CODE object from Org to JIRA.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+  (org-element-property :utf-8 entity))
 
 (defun ox-jira-example-block (example-block contents info)
   "Transcode an EXAMPLE-BLOCK element from Org to Jira.
