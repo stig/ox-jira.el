@@ -381,7 +381,7 @@ the plist used as a communication channel."
 CONTENTS holds the contents of the src-block.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
-    (let* ((title (apply #'concat (org-export-get-caption src-block)))
+    (let* ((title (or (car (org-export-get-caption src-block)) ""))
            (lang (org-element-property :language src-block))
            (lang (if (member lang ox-jira-src-supported-languages) lang "none"))
            (code (org-export-format-code-default src-block info))
