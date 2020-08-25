@@ -145,7 +145,7 @@
     (timestamp . ox-jira-timestamp)
     (underline . ox-jira-underline)
     (verbatim . ox-jira-verbatim)
-    (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
+    (verse-block . ox-jira-verse-block))
   :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
   :options-alist '((:src-collapse-threshold nil nil ox-jira-src-collapse-threshold))
   :menu-entry
@@ -349,6 +349,12 @@ contextual information."
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value verbatim)))
+
+(defun ox-jira-verse-block (_verse-block contents info)
+  "Transcode a VERSE object from Org to Jira.
+CONTENTS is verse block contents.  INFO is a plist holding
+contextual information."
+  (replace-regexp-in-string "^\\\(.*\\\)$" "{{\\1}}" contents))
 
 (defun ox-jira-paragraph (paragraph contents info)
   "Transcode a PARAGRAPH element from Org to JIRA.
