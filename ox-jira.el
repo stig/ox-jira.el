@@ -119,7 +119,7 @@
     (keyword . (lambda (&rest args) ""))
     (latex-environment . (lambda (&rest args) (ox-jira--not-implemented 'latex-environment)))
     (latex-fragment . (lambda (&rest args) (ox-jira--not-implemented 'latex-fragment)))
-    (line-break . (lambda (&rest args) (ox-jira--not-implemented 'line-break)))
+    (line-break . (lambda (&rest args) "\n\n"))
     (link . ox-jira-link)
     (node-property . (lambda (&rest args) (ox-jira--not-implemented 'node-property)))
     (options . (lambda (&rest args) (ox-jira--not-implemented 'options)))
