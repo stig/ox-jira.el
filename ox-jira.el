@@ -1,6 +1,6 @@
 ;;; ox-jira.el --- JIRA Backend for Org Export Engine
 
-;; Copyright (C) 2016 Stig Brautaset
+;; Copyright (C) 2016-2020 Stig Brautaset
 
 ;; Author: Stig Brautaset <stig@brautaset.org>
 ;; Version: 0.1-SNAPSHOT
