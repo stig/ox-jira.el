@@ -90,6 +90,17 @@ h3. third level
 ** second level
 *** third level"))))
 
+;; Override headline offset
+;;
+(ert-deftest ox-jira-test/headlines-with-customized-levels ()
+  (let ((ox-jira-override-headline-offset 2))
+    (should (equal "h3. top level
+h4. second level
+h5. third level
+" (to-jira "* top level
+** second level
+*** third level")))))
+
 
 (ert-deftest ox-jira-test/todo-headlines ()
   (should

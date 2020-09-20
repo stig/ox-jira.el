@@ -1,6 +1,6 @@
 ;;; ox-jira.el --- JIRA Backend for Org Export Engine
 
-;; Copyright (C) 2016 Stig Brautaset
+;; Copyright (C) 2016-2020 Stig Brautaset
 
 ;; Author: Stig Brautaset <stig@brautaset.org>
 ;; Version: 0.1-SNAPSHOT
@@ -88,6 +88,17 @@
   "Supported languages for syntax highlighting."
   :group 'ox-export-jira
   :type '(list))
+
+(defcustom ox-jira-override-headline-offset nil
+  "Use this to override the (default) relative headline levels.
+
+If you want to have the headings *real* heading level in
+the Jira output when you export a subsection, use `0' here.
+
+If you think the headings in Jira are too big by default, you
+could set this to `2' to start headings at level 3."
+  :group 'ox-export-jira
+  :type 'integer)
 
 ;;; Defining Backend
 
@@ -239,8 +250,11 @@ information."
   "Transcode a HEADLINE element from Org to JIRA.
 CONTENTS is the contents of the headline, as a string.  INFO is
 the plist used as a communication channel."
-  (let* ((level (org-export-get-relative-level headline info))
-         (title (org-export-data-with-backend
+  (let* ((headline-info (if (eql ox-jira-override-headline-offset nil)
+			    info
+			  (plist-put nil :headline-offset ox-jira-override-headline-offset)))
+	 (level (org-export-get-relative-level headline headline-info))
+	 (title (org-export-data-with-backend
                  (org-element-property :title headline)
                  'jira info))
          (todo (and (plist-get info :with-todo-keywords)
