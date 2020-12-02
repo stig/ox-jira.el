@@ -142,8 +142,9 @@ h1. {color:red}{{TODO}}{color} This is another headline {color:blue}{{:FOO:BAR:}
   (should (equal "see [#Heading Name] for details\n"
                  (to-jira "see [[#Heading Name]] for details")))
   (should (equal "see [This Thing|#This Thing] for details\n"
-                 (to-jira "see [[#Heading Name][This Thing]] for details"))))
-
+                 (to-jira "see [[#Heading Name][This Thing]] for details")))
+  (should (equal "contact [User Name|~accountid:accountid] for details\n"
+                 (to-jira "contact [[~accountid:accountid][User Name]] for details\n"))))
 ;; Check that text in paragraphs does not have hard newlines.
 ;;
 (ert-deftest ox-jira-test/paragraphs ()

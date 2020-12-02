@@ -331,6 +331,8 @@ INFO is a plist holding contextual information.  See
          (path (cond
                 ((member type '("http" "https" "ftp" "mailto" "doi"))
                  (concat type ":" raw-path))
+                ((string-prefix-p "~accountid" raw-path)
+                 raw-path)
                 ((string= type "file")
                  (org-export-file-uri raw-path))
                 ((string= type "custom-id")
