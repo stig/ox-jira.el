@@ -217,7 +217,7 @@ information."
   "Transcode an FIXED-WIDTH element from Org to Jira.
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
-  (format "{noformat}\n%s{noformat}"
+  (format "{noformat}\n%s\n{noformat}"
           (org-remove-indentation
            (org-element-property :value fixed-width))))
 
@@ -331,6 +331,8 @@ INFO is a plist holding contextual information.  See
          (path (cond
                 ((member type '("http" "https" "ftp" "mailto" "doi"))
                  (concat type ":" raw-path))
+                ((string-prefix-p "~accountid" raw-path)
+                 raw-path)
                 ((string= type "file")
                  (org-export-file-uri raw-path))
                 ((string= type "custom-id")
