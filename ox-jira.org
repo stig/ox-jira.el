@@ -1,4 +1,4 @@
-s#+TITLE: JIRA Backend for Org Export Engine
+#+TITLE: JIRA Backend for Org Export Engine
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
 #+PROPERTY: header-args:emacs-lisp :tangle yes :results silent
