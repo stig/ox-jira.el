@@ -217,7 +217,7 @@ information."
   "Transcode an FIXED-WIDTH element from Org to Jira.
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
-  (format "{noformat}\n%s\n{noformat}"
+  (format "{noformat}\n%s{noformat}"
           (org-remove-indentation
            (org-element-property :value fixed-width))))
 
