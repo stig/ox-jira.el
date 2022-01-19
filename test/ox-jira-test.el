@@ -22,8 +22,11 @@
 ;;; Code:
 
 (require 'ert)
+(require 'org-element)
 (require 'ox)
 (require 'ox-jira)
+(eval-when-compile
+  (require 'cl-lib))
 
 (defun to-jira (string)
   (org-export-string-as string 'jira nil '(:src-collapse-threshold 3)))
@@ -144,7 +147,20 @@ h1. {color:red}{{TODO}}{color} This is another headline {color:blue}{{:FOO:BAR:}
   (should (equal "see [This Thing|#This Thing] for details\n"
                  (to-jira "see [[#Heading Name][This Thing]] for details")))
   (should (equal "contact [User Name|~accountid:accountid] for details\n"
-                 (to-jira "contact [[~accountid:accountid][User Name]] for details\n"))))
+                 (to-jira "contact [[~accountid:accountid][User Name]] for details\n")))
+  (cl-letf (((symbol-function #'org-export-custom-protocol-maybe)
+             (lambda (link &rest _)
+               (let ((path (org-element-property :path link)))
+                 (if (string-prefix-p "example-protocol:" path)
+                     "http://example.com"
+                   nil)))))
+    (should (equal "fi [http://example.com] fo\n"
+                   (to-jira "fi [[example-protocol:example.net]] fo")))
+    (should (equal "fi [Example|http://example.com] fo\n"
+                   (to-jira "fi [[example-protocol:example.net][Example]] fo")))
+    (should (not (equal "fi [Example|[http://example.com] fo\n"
+                        (to-jira "fi [[unsupported-protocol:example.net][Example]] fo"))))))
+
 ;; Check that text in paragraphs does not have hard newlines.
 ;;
 (ert-deftest ox-jira-test/paragraphs ()

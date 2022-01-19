@@ -562,6 +562,7 @@ INFO is a plist holding contextual information.  See
                  (if desc (concat "#" desc) (concat "#" raw-path)))
                 ((string-prefix-p "*" raw-path)
                  (concat "#" (seq-subseq raw-path 1)))
+                ((org-export-custom-protocol-maybe link desc 'jira info))
                 (t raw-path))))
     (cond
      ;; Link with description
