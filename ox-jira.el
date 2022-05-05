@@ -112,7 +112,7 @@ could set this to `2' to start headings at level 3."
     (diary-sexpexample-block . (lambda (&rest args) (ox-jira--not-implemented 'diary-sexpexample-block)))
     (drawer . (lambda (&rest args) (ox-jira--not-implemented 'drawer)))
     (dynamic-block . (lambda (&rest args) (ox-jira--not-implemented 'dynamic-block)))
-    (entity . (lambda (&rest args) (ox-jira--not-implemented 'entity)))
+    (entity . ox-jira-entity)
     (example-block . ox-jira-example-block)
     (export-block . (lambda (&rest args) (ox-jira--not-implemented 'export-block)))
     (export-snippet . (lambda (&rest args) (ox-jira--not-implemented 'export-snippet)))
@@ -130,7 +130,7 @@ could set this to `2' to start headings at level 3."
     (keyword . (lambda (&rest args) ""))
     (latex-environment . (lambda (&rest args) (ox-jira--not-implemented 'latex-environment)))
     (latex-fragment . (lambda (&rest args) (ox-jira--not-implemented 'latex-fragment)))
-    (line-break . (lambda (&rest args) (ox-jira--not-implemented 'line-break)))
+    (line-break . (lambda (&rest args) "\n\n"))
     (link . ox-jira-link)
     (node-property . (lambda (&rest args) (ox-jira--not-implemented 'node-property)))
     (options . (lambda (&rest args) (ox-jira--not-implemented 'options)))
@@ -156,7 +156,7 @@ could set this to `2' to start headings at level 3."
     (timestamp . ox-jira-timestamp)
     (underline . ox-jira-underline)
     (verbatim . ox-jira-verbatim)
-    (verse-block . (lambda (&rest args) (ox-jira--not-implemented 'verse-block))))
+    (verse-block . ox-jira-verse-block))
   :filters-alist '((:filter-parse-tree . ox-jira-fix-multi-paragraph-items))
   :options-alist '((:src-collapse-threshold nil nil ox-jira-src-collapse-threshold))
   :menu-entry
@@ -204,6 +204,12 @@ contextual information."
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value code)))
+
+(defun ox-jira-entity (entity _contents info)
+  "Transcode a CODE object from Org to JIRA.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+  (org-element-property :utf-8 entity))
 
 (defun ox-jira-example-block (example-block contents info)
   "Transcode an EXAMPLE-BLOCK element from Org to Jira.
@@ -361,6 +367,12 @@ CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value verbatim)))
 
+(defun ox-jira-verse-block (_verse-block contents info)
+  "Transcode a VERSE object from Org to Jira.
+CONTENTS is verse block contents.  INFO is a plist holding
+contextual information."
+  (replace-regexp-in-string "^\\\(.*\\\)$" "{{\\1}}" contents))
+
 (defun ox-jira-paragraph (paragraph contents info)
   "Transcode a PARAGRAPH element from Org to JIRA.
 CONTENTS is the contents of the paragraph, as a string.  INFO is
@@ -392,7 +404,7 @@ the plist used as a communication channel."
 CONTENTS holds the contents of the src-block.  INFO is a plist holding
 contextual information."
   (when (org-string-nw-p (org-element-property :value src-block))
-    (let* ((title (apply #'concat (org-export-get-caption src-block)))
+    (let* ((title (or (car (org-export-get-caption src-block)) ""))
            (lang (org-element-property :language src-block))
            (lang (if (member lang ox-jira-src-supported-languages) lang "none"))
            (code (org-export-format-code-default src-block info))
