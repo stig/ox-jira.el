@@ -251,10 +251,10 @@ information."
 CONTENTS is the contents of the headline, as a string.  INFO is
 the plist used as a communication channel."
   (let* ((headline-info (if (eql ox-jira-override-headline-offset nil)
-			    info
-			  (plist-put nil :headline-offset ox-jira-override-headline-offset)))
-	 (level (org-export-get-relative-level headline headline-info))
-	 (title (org-export-data-with-backend
+                            info
+                          (plist-put nil :headline-offset ox-jira-override-headline-offset)))
+         (level (org-export-get-relative-level headline headline-info))
+         (title (org-export-data-with-backend
                  (org-element-property :title headline)
                  'jira info))
          (todo (and (plist-get info :with-todo-keywords)
