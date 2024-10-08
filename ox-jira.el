@@ -141,7 +141,7 @@ could set this to `2' to start headings at level 3."
     (planning . (lambda (&rest args) (ox-jira--not-implemented 'planning)))
     (property-drawer . (lambda (&rest args) (ox-jira--not-implemented 'property-drawer)))
     (quote-block . ox-jira-quote-block)
-    (radio-target . (lambda (&rest args) (ox-jira--not-implemented 'radio-target)))
+    (radio-target . ox-jira-radio-target)
     (section . ox-jira-section)
     (special-block . (lambda (&rest args) (ox-jira--not-implemented 'special-block)))
     (src-block . ox-jira-src-block)
@@ -319,6 +319,12 @@ contextual information."
        (format "*%s*: " tag))
      contents)))
 
+(defun ox-jira-radio-target (radio-target contents info)
+  "Transcode a RADIO-TARGET object from Org to JIRA.
+CONTENTS is nil. INFO is a plist holding contextual information."
+  (let ((value (org-element-property :value radio-target)))
+    (format "{anchor:%s}" value)))
+
 (defun ox-jira-link (link desc info)
   "Transcode a LINK object from Org to JIRA.
 
@@ -339,6 +345,8 @@ INFO is a plist holding contextual information.  See
                  (if desc (concat "#" desc) (concat "#" raw-path)))
                 ((string-prefix-p "*" raw-path)
                  (concat "#" (seq-subseq raw-path 1)))
+                ((string= type "radio")
+                 (concat "#" raw-path))
                 ((org-export-custom-protocol-maybe link desc 'jira info))
                 (t raw-path))))
     (cond
