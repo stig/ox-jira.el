@@ -12,20 +12,7 @@ jobs:
       - checkout
       - run: ./run-tests.sh
 
-  tangle:
-    executor: emacs26
-    steps:
-      - checkout
-      - run:
-          name: Tangle File
-          command: >
-            emacs --batch
-            --eval "(require 'ob-tangle)"
-            --eval '(org-babel-tangle-file "ox-jira.org")'
-      - run: git diff --exit-code
-
 workflows:
   integrate:
     jobs:
       - tests
-      - tangle

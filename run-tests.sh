@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-emacs --version
 emacs -q \
       --batch \
       -l ox-jira.el \
