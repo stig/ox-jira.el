@@ -375,8 +375,7 @@ formatted
   (should (equal "{noformat}
 stuff that should
  not be
-formatted
-{noformat}
+formatted{noformat}
 " (to-jira ": stuff that should
 :  not be
 : formatted

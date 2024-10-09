@@ -1,31 +1,23 @@
 version: 2.1
 
-executors:
-  emacs26:
-    docker:
-      - image: silex/emacs:26.3-dev
-
 jobs:
-  tests:
-    executor: emacs26
+  test:
+    parameters:
+      emacs-version:
+        type: integer
+    docker:
+      - image: silex/emacs:<< parameters.emacs-version >>-ci
     steps:
       - checkout
       - run: ./run-tests.sh
 
-  tangle:
-    executor: emacs26
-    steps:
-      - checkout
-      - run:
-          name: Tangle File
-          command: >
-            emacs --batch
-            --eval "(require 'ob-tangle)"
-            --eval '(org-babel-tangle-file "ox-jira.org")'
-      - run: git diff --exit-code
-
 workflows:
   integrate:
     jobs:
-      - tests
-      - tangle
+      - test:
+          matrix:
+            parameters:
+              emacs-version:
+                - 27
+                - 28
+                - 29

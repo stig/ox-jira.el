@@ -89,6 +89,11 @@
   :group 'ox-export-jira
   :type '(list))
 
+;; For really long source snippets or sections of logfiles JIRA
+;; supports showing a preview, and /collapsing/ the rest. How much to
+;; preview before collapsing the rest is up to individual taste, so
+;; let's make it configurable.
+
 (defcustom ox-jira-override-headline-offset nil
   "Use this to override the (default) relative headline levels.
 
@@ -165,14 +170,29 @@ could set this to `2' to start headings at level 3."
 
 ;;; Internal Helpers
 
+;; Because I'm adding support for things as I find I need it rather than
+;; all in one go, let's put a big fat red marker in for things we have
+;; not implemented yet, to avoid missing it.
+
 (defun ox-jira--not-implemented (element-type)
   "Replace anything we don't handle yet with a big red marker."
   (format "{color:red}Element of type '%s' not implemented!{color}" element-type))
+
+;; I often use super^script and sub_script at the end of words, with
+;; no whitespace immediately before it. JIRA doesn't support that, so
+;; we have to fake it. This function makes simple text transforms
+;; "embeddable" by preceding them with an empty anchor. 
 
 (defun ox-jira--text-transform-embeddable (transform-char contents)
   (concat "{anchor}" transform-char contents transform-char))
 
 ;;; Filters
+
+;; Org support a single blank line between items in a list, but if we
+;; export like that JIRA interprets it as multiple consecutive lists;
+;; which is never what I want. We can fix this by removing the
+;; "post-blank" after =items= (and =paragraphs= inside =items=) using
+;; a filter.
 
 (defun ox-jira-fix-multi-paragraph-items (tree backend info)
   "Remove extra blank line between paragraphs in plain-list items.
@@ -193,12 +213,17 @@ Assume BACKEND is `jira'."
 
 ;;; Transcode functions
 
+;; These functions do the actual translation to JIRA format. I used
+;; Atlassian's Text Formatting Notation Help page as a reference, cf
+;; https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all
+
 (defun ox-jira-bold (bold contents info)
   "Transcode BOLD from Org to JIRA.
 CONTENTS is the text with bold markup. INFO is a plist holding
 contextual information."
   (format "*%s*" contents))
 
+;; For CODE elements we cannot use the contents; it is always nil.
 (defun ox-jira-code (code _contents info)
   "Transcode a CODE object from Org to JIRA.
 CONTENTS is nil.  INFO is a plist used as a communication
@@ -220,6 +245,10 @@ information."
   (format "{noformat}\n%s{noformat}"
           (org-remove-indentation
            (org-element-property :value fixed-width))))
+
+;;;; Footnotes
+
+;; Footnotes have two parts: the reference, and the definition.
 
 (defun ox-jira--footnote-anchor (element)
   (let ((label (org-element-property :label element)))
@@ -245,6 +274,18 @@ information."
          (ref (ox-jira--footnote-ref anchor)))
     (format "{anchor:fn%s}[^%s^|#fnr%s] %s"
             anchor ref anchor contents)))
+
+;;;; Headline
+
+;; Headlines are a little bit more complex. I'm not even attempting to
+;; support TODO labels and meta-information, just the straight-up
+;; text. It would be nice to support the six standard levels of
+;; headlines JIRA offers though.
+
+;; Since the headline level is /relative/ rather than absolute, if the
+;; exporter sees a =** second level= heading before it's seen a =*
+;; first level= then the =** second level= will think it's a top-level
+;; heading. That's a bit weird, but there you go.
 
 (defun ox-jira-headline (headline contents info)
   "Transcode a HEADLINE element from Org to JIRA.
@@ -285,6 +326,25 @@ CONTENTS is the text with italic markup. INFO is a plist holding
 contextual information."
   (format "_%s_" contents))
 
+;;;; List item
+
+;; A list item. The JIRA format for nested lists follows. (You can
+;; also mix ordered and unordered lists.)
+
+;; : * item
+;; : ** sub-item
+;; : ** sub-item 2
+;; : * item 2
+
+;; The item element itself does not know what type it is: that is an
+;; attribute of its parent, a plain-list element. We need to walk the
+;; path of alternating plain-list and item nodes until there are no
+;; more, and extract their type. The type list is used to create a
+;; bullet string.
+
+;; JIRA doesn't really have support for definition lists, so we fake
+;; it with a bullet list and some bold text for the term.
+
 (defun ox-jira--list-type-path (item)
   (when (and item (eq 'item (org-element-type item)))
     (let* ((list (org-element-property :parent item))
@@ -318,6 +378,10 @@ contextual information."
      (when tag
        (format "*%s*: " tag))
      contents)))
+
+;; JIRA supports many types of links. I don't expect to support them
+;; all, but we must make a token effort. A lot of this code is cribbed
+;; from =ox-latex.el=.
 
 (defun ox-jira-link (link desc info)
   "Transcode a LINK object from Org to JIRA.
@@ -361,17 +425,31 @@ CONTENTS is nil.  INFO is a plist used as a communication
 channel."
   (format "{{%s}}" (org-element-property :value verbatim)))
 
+;; One of the most annoying aspects of JIRA markup is its broken
+;; handling of line breaks; any newlines in the source becomes hard
+;; linebreaks in the rendered output. We need to replace /internal/
+;; newlines (i.e. any not at the end of the string) with a space.
+
 (defun ox-jira-paragraph (paragraph contents info)
   "Transcode a PARAGRAPH element from Org to JIRA.
 CONTENTS is the contents of the paragraph, as a string.  INFO is
 the plist used as a communication channel."
   (replace-regexp-in-string "\n\\([^\']\\)" " \\1" contents))
 
+;; Lists are simple to support since all the complexity is in the code
+;; for list item.
+
 (defun ox-jira-plain-list (plain-list contents info)
   "Transcode PLAIN-LIST from Org to JIRA.
 CONTENTS is the text with plain-list markup. INFO is a plist holding
 contextual information."
   contents)
+
+;; This is text with no markup, but we have to escape certain
+;; characters to avoid tripping up JIRA. In particular:
+
+;; - ={= :: Introduces macros
+;; - =[= :: Introduces links
 
 (defun ox-jira-plain-text (text info)
   "Transcode TEXT from Org to JIRA.
@@ -380,12 +458,19 @@ contextual information."
   (replace-regexp-in-string "\\([[{]\\)"
                             '(lambda (p) (format "\\\\%s" p))
                             text))
+;; Paragraphs are grouped into sections. I've not found any mention in
+;; the Org documentation, but it appears to be essential for any
+;; export to happen. I've essentially cribbed this from =ox-latex.el=.
 
 (defun ox-jira-section (section contents info)
   "Transcode a SECTION element from Org to JIRA.
 CONTENTS is the contents of the section, as a string.  INFO is
 the plist used as a communication channel."
   contents)
+
+;; If language is not member of =ox-jira-src-supported-languages=,
+;; =none=, will be used which I imagine will be a bit like
+;; ={noformat}=.
 
 (defun ox-jira-src-block (src-block contents info)
   "Transcode a SRC-BLOCK element from Org to Jira.
@@ -416,11 +501,35 @@ CONTENTS is the text with superscript markup. INFO is a plist holding
 contextual information."
   (ox-jira--text-transform-embeddable "^" contents))
 
+;;;; Tables
+
+;; Org's table editor is one of the many reasons to use Org; it is
+;; excellent. Org and JIRA's tables are quite similar. Where Org marks
+;; tables up like this:
+
+;; : | Name   | Score |
+;; : |--------+-------|
+;; : | Ashley |     2 |
+;; : | Alex   |     3 |
+
+;; Jira uses the following format:
+
+;; : || Name  || Score ||
+;; : | Ashley | 2 |
+;; : | Alex   | 3 |
+
+;; Tables are complex beasts. I only hope to support simple ones.
+;; Looks like most of the logic will live in the row and cell
+;; transcoding functions.
+
 (defun ox-jira-table (table contents info)
   "Transcode a TABLE element from Org to JIRA.
 CONTENTS holds the contents of the table.  INFO is a plist holding
 contextual information."
   contents)
+
+;; We only want to output =standard= rows, not horizontal lines. I'm
+;; not sure if detection of header rows belong here or in the cells.
 
 (defun ox-jira-table-row (table-row contents info)
   "Transcode a TABLE-ROW element from Org to JIRA.
@@ -428,6 +537,11 @@ CONTENTS holds the contents of the table-row.  INFO is a plist holding
 contextual information."
   (when (eq 'standard (org-element-property :type table-row))
     (format "%s\n" contents)))
+
+;; The cell itself does not know if it is a header cell or not, so we
+;; have to ask its containing row if it is the first row, and the
+;; table if it has a header row at all. If those things are true, make
+;; the cell a header cell.
 
 (defun ox-jira-table-cell (table-cell contents info)
   "Transcode a TABLE-CELL element from Org to JIRA.
@@ -442,10 +556,19 @@ contextual information."
     (format "%s %s %s" sep (if contents contents "")
             (if (org-export-last-sibling-p table-cell info) sep ""))))
 
+;; This is updated to show progress of subsequent list of check boxes.
+
 (defun ox-jira-statistics-cookie (statistics-cookie _contents _info)
   "Transcode a STATISTICS-COOKIE object from Org to JIRA.
 CONTENTS is nil.  INFO is a plist holding contextual information."
   (format "\\%s" (org-element-property :value statistics-cookie)))
+
+;; JIRA call this "deleted text". In my opinion this is rather silly
+;; because it is obviously there. Org is at least logical in calling
+;; it for what it is. I suppose JIRA is trying to be semantic here,
+;; but outside a diff you rather want to look in the revision log for
+;; deleted text rather than have it clutter up things. Still, it's
+;; simple to support, so we might as well do it.
 
 (defun ox-jira-strike-through (strike-through contents info)
   "Transcode STRIKE-THROUGH from Org to JIRA.
