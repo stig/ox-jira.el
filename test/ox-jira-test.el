@@ -413,6 +413,12 @@ h1. Footnotes
   (should (equal "An active timestamp: _<2017-01-11 Wed 02:12>_\n"
                  (to-jira "An active timestamp: <2017-01-11 Wed 02:12>"))))
 
+(ert-deftest ox-jira-test/radio-targets ()
+  (should (equal "This is [link|#link] to this {anchor:link}.\n"
+                 (to-jira "This is link to this <<<link>>>.")))
+  (should (equal "h1. {anchor:some target}\nh1. {anchor:other topic}\nReferencing previous [some target|#some target].\n"
+                 (to-jira "* <<<some target>>>\n* <<<other topic>>>\nReferencing previous some target."))))
+
 (provide 'ox-jira-test)
 
 ;;; ox-jira.el-test.el ends here
