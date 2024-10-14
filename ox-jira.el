@@ -146,7 +146,7 @@ could set this to `2' to start headings at level 3."
     (planning . (lambda (&rest args) (ox-jira--not-implemented 'planning)))
     (property-drawer . (lambda (&rest args) (ox-jira--not-implemented 'property-drawer)))
     (quote-block . ox-jira-quote-block)
-    (radio-target . (lambda (&rest args) (ox-jira--not-implemented 'radio-target)))
+    (radio-target . ox-jira-radio-target)
     (section . ox-jira-section)
     (special-block . (lambda (&rest args) (ox-jira--not-implemented 'special-block)))
     (src-block . ox-jira-src-block)
@@ -292,10 +292,10 @@ information."
 CONTENTS is the contents of the headline, as a string.  INFO is
 the plist used as a communication channel."
   (let* ((headline-info (if (eql ox-jira-override-headline-offset nil)
-			    info
-			  (plist-put nil :headline-offset ox-jira-override-headline-offset)))
-	 (level (org-export-get-relative-level headline headline-info))
-	 (title (org-export-data-with-backend
+                            info
+                          (plist-put nil :headline-offset ox-jira-override-headline-offset)))
+         (level (org-export-get-relative-level headline headline-info))
+         (title (org-export-data-with-backend
                  (org-element-property :title headline)
                  'jira info))
          (todo (and (plist-get info :with-todo-keywords)
@@ -379,6 +379,12 @@ contextual information."
        (format "*%s*: " tag))
      contents)))
 
+(defun ox-jira-radio-target (radio-target contents info)
+  "Transcode a RADIO-TARGET object from Org to JIRA.
+CONTENTS is nil. INFO is a plist holding contextual information."
+  (let ((value (org-element-property :value radio-target)))
+    (format "{anchor:%s}" value)))
+
 ;; JIRA supports many types of links. I don't expect to support them
 ;; all, but we must make a token effort. A lot of this code is cribbed
 ;; from =ox-latex.el=.
@@ -403,6 +409,8 @@ INFO is a plist holding contextual information.  See
                  (if desc (concat "#" desc) (concat "#" raw-path)))
                 ((string-prefix-p "*" raw-path)
                  (concat "#" (seq-subseq raw-path 1)))
+                ((string= type "radio")
+                 (concat "#" raw-path))
                 ((org-export-custom-protocol-maybe link desc 'jira info))
                 (t raw-path))))
     (cond
