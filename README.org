@@ -2,7 +2,7 @@
 #+AUTHOR: Stig Brautaset
 
   [[http://melpa.org/#/ox-jira][file:http://melpa.org/packages/ox-jira-badge.svg]]
-  [[https://travis-ci.org/stig/ox-jira.el][file:https://travis-ci.org/stig/ox-jira.el.svg?branch=master]]
+  [[https://dl.circleci.com/status-badge/redirect/gh/stig/ox-jira.el/tree/trunk][file:https://dl.circleci.com/status-badge/img/gh/stig/ox-jira.el/tree/trunk.svg?style=svg]]
 
 * Introduction
 
